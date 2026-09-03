@@ -1,0 +1,63 @@
+# Gradle
+.gradle/
+.gradle-user-home/
+build/
+**/build/
+
+# Android Studio
+.idea/
+*.iml
+
+# Local SDK settings
+local.properties
+
+# APK / App Bundle
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Signing keys
+*.jks
+*.keystore
+
+# Native build
+.externalNativeBuild/
+.cxx/
+
+# Captures and generated reports
+captures/
+*.hprof
+
+# OS
+.DS_Store
+Thumbs.db
+.idea/
+.gradle/
+.gradle-user-home/
+build/
+**/build/
+local
+
+# Android/Gradle generated files
+.gradle/
+.gradle-user/
+.gradle-user-home/
+
+.android/
+.android-build-home/
+.android-home/
+.android-user/
+.android-user-home/
+
+**/build/
+local.properties
+.externalNativeBuild/
+.cxx/
+
+# Android Studio
+.idea/
+*.iml
+
+# Miscellaneous
+captures/

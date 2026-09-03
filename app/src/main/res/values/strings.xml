@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PAS 전투 프로토타입</string>
+    <string name="project_pas">Project-PAS</string>
+    <string name="touch_to_start">Touch to Start</string>
+</resources>

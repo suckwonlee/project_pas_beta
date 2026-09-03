@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0C1015"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="캐릭터 선택"
+            android:textColor="@android:color/white"
+            android:textSize="26sp" />
+
+        <GridLayout
+            android:id="@+id/character_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:columnCount="4" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_battle_panel"
+            android:orientation="vertical"
+            android:padding="14dp">
+
+            <TextView
+                android:id="@+id/character_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="용사후보"
+                android:textColor="@android:color/white"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/selection_guide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="#CBD8E0"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/rune_selection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_rune1"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_start"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/btn_rune2"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_start"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/debug_skill_selection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <Button android:id="@+id/btn_attack_skill" android:layout_width="match_parent" android:layout_height="52dp" android:background="@drawable/bg_btn_start" android:textColor="@android:color/white" />
+                <Button android:id="@+id/btn_defense_skill" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="5dp" android:background="@drawable/bg_btn_start" android:textColor="@android:color/white" />
+                <GridLayout android:id="@+id/learned_skill_grid" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:columnCount="2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/character_flavor_panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_intent_panel"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="캐릭터 플레이버"
+                    android:textColor="#FFD98B"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/character_flavor_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:lineSpacingExtra="3dp"
+                    android:textColor="#D9E1E6"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_action"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_btn_start"
+            android:text="시작"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
+    </LinearLayout>
+</ScrollView>

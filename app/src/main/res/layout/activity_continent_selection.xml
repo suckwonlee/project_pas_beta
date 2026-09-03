@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <ImageView
+        android:id="@+id/continent_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#55000000" />
+
+    <ImageButton
+        android:id="@+id/arrow_left"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_vertical|start"
+        android:layout_marginStart="14dp"
+        android:background="@drawable/bg_battle_panel"
+        android:contentDescription="이전 대륙"
+        android:padding="14dp"
+        android:src="@drawable/ic_arrow_left" />
+
+    <ImageButton
+        android:id="@+id/arrow_right"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="14dp"
+        android:background="@drawable/bg_battle_panel"
+        android:contentDescription="다음 대륙"
+        android:padding="14dp"
+        android:src="@drawable/ic_arrow_right" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="18dp"
+        android:background="@drawable/bg_battle_panel"
+        android:orientation="vertical"
+        android:padding="18dp">
+
+        <TextView
+            android:id="@+id/continent_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="28sp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
+            <TextView
+                android:id="@+id/description_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp"
+                android:padding="8dp"
+                android:textColor="#E1E6EA"
+                android:textSize="15sp" />
+        </ScrollView>
+
+        <Button
+            android:id="@+id/btn_next_center"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_btn_start"
+            android:text="다음"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="17sp" />
+    </LinearLayout>
+</FrameLayout>
