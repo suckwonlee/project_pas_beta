@@ -1,0 +1,8 @@
+{
+  "id": "hero_swordsmanship",
+  "name": "용사 검법",
+  "old": "skill_hero_swordsmanship_v6.png",
+  "filename": "skill_hero_swordsmanship_v7.png",
+  "reason": "구원의 맹세와 같은 중간 크기 도트 밀도와 정교한 명암으로 조정",
+  "prompt": "Use case: precise style-transfer edit.\nCreate exactly ONE standalone square 1254x1254 RPG skill icon.\nImage 1 supplies ONLY the approved Hero Swordsmanship composition: one extremely long, broad golden sword spanning almost the entire diagonal toward the upper-left, with the blond armored hero small in the lower-right and both hands gripping the hilt.\nImage 2 is the STRICT rendering-quality reference. Match its pixel-art density exactly: medium-size visible square pixel clusters, clean but detailed face and armor, stepped edges that remain refined, approximately the same number and scale of pixels across the face, hair, metal plates, cape, glow and border as Image 2. Use the same crisp dark outlines, controlled amber-gold lighting, limited but nuanced color ramps and tidy gold clipped-corner frame.\nThis must sit visually beside Image 2 as the same artist and same icon set. Keep more detail and smaller pixel blocks than the previous overly coarse version. Avoid both extremes: NO giant blocky 96x96-look pixels, no chunky mosaic that destroys facial detail; also NO smooth painterly brushwork, soft gradients, anti-aliasing, photoreal texture or high-frequency digital painting.\nPreserve the hero identity from Image 2: young clean-shaven blond man, blue eyes, silver plate armor with gold trim and red cape. Keep the exaggerated sword as the dominant subject, hero about 25–30% of frame, dark amber battle energy background. One sword only, no extra weapon, no cross emblem on armor, no text, logo or watermark."
+}

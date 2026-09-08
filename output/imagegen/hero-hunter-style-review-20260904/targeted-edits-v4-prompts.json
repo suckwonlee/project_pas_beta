@@ -1,0 +1,38 @@
+[
+  {
+    "id": "hero_swordsmanship",
+    "name": "용사 검법",
+    "old": "skill_hero_swordsmanship.png",
+    "filename": "skill_hero_swordsmanship_v4.png",
+    "reason": "인터넷에서 통용되는 용자검법 1초식의 플루크형 실루엣과 과장된 원근 구도로 재구성",
+    "refs": [
+      "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_swordsmanship.png",
+      "C:/Users/USER/AndroidStudioProjects/project_pas/app/src/main/res/drawable-nodpi/hero.png"
+    ],
+    "prompt": "Use case: stylized-concept. Create exactly ONE standalone square 1254x1254 RPG skill icon, never a sheet. Match the established crisp deliberate pixel-art blocks, dark dramatic background, warm amber-gold highlights, thin gold frame with clipped corners. No text or watermark. Reference 1 supplies the skill identity. Reference 2 supplies the exact hero: young adult clean-shaven blond man, blue eyes, silver plate armor, gold trim and red undercloth. Recompose him in the familiar 'Brave Sword Style First Form' visual pose only, similar to a longsword Pflug guard: three-quarter body, both hands gripping the hilt close beside and slightly below the torso, elbows bent, blade thrusting diagonally from close to his body toward the upper foreground. Use bold foreshortening so the sword grows dramatically toward the viewer, with its point commanding the upper-left/upper-center, while his determined face stays clearly visible behind it. Strong heroic low-angle view and gold energy along the blade. Do not copy a specific copyrighted character, costume or exact frame; use only this generic pose and cinematic composition. Remove the old empty black background. No cross emblem on his armor."
+  },
+  {
+    "id": "salvation_vow",
+    "name": "구원의 맹세",
+    "old": "skill_hero_salvation_vow_v3.png",
+    "filename": "skill_hero_salvation_vow_v4.png",
+    "reason": "눈을 감고 두 손으로 검을 짚으며 엄숙히 맹세하는 자세로 조정",
+    "refs": [
+      "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_salvation_vow_v3.png",
+      "C:/Users/USER/AndroidStudioProjects/project_pas/app/src/main/res/drawable-nodpi/hero.png"
+    ],
+    "prompt": "Use case: stylized-concept. Create exactly ONE standalone square 1254x1254 RPG skill icon, never a sheet. Match the established crisp deliberate pixel-art blocks, dark dramatic background, warm amber-gold highlights, thin gold frame with clipped corners. No text or watermark. Reference 1 is the current icon; preserve its hero identity, centered sword, clasped gauntlets, armor colors, radiant atmosphere and absence of any cross-shaped armor emblem. Reference 2 reinforces his exact blond hair and face. Change the pose and expression so he is clearly taking a solemn vow: BOTH EYES FULLY CLOSED with visible closed eyelid lines, chin slightly lowered, calm serious mouth, both gauntleted hands clasped together over the pommel of the upright sword. His posture must read as a quiet sacred promise, not combat or prayer to a cross. Keep the sword and ordinary functional crossguard, but absolutely no decorative cross insignia anywhere on armor, belt, cloak or background."
+  },
+  {
+    "id": "deadly_poison_curse",
+    "name": "극독의 저주",
+    "old": "skill_hunter_deadly_poison_curse_v2.png",
+    "filename": "skill_hunter_deadly_poison_curse_v4.png",
+    "reason": "화살을 겨누는 자세를 제거하고 손으로 극독의 저주를 시전하는 장면으로 변경",
+    "refs": [
+      "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_deadly_poison_curse_v2.png",
+      "C:/Users/USER/AndroidStudioProjects/project_pas/app/src/main/res/drawable-nodpi/hunter.png"
+    ],
+    "prompt": "Use case: stylized-concept. Create exactly ONE standalone square 1254x1254 RPG skill icon, never a sheet. Match the established crisp deliberate pixel-art blocks, dark dramatic background, warm amber-gold highlights, thin gold frame with clipped corners. No text or watermark. Reference 1 supplies the poison-curse theme and frame. Reference 2 supplies the exact hunter: rugged mature man, swept-back dark brown hair, full dark beard and mustache, cheek scar, brown leather mantle and gear. Remove the arrow-aiming pose completely. He must NOT hold, draw, nock, point or aim any bow or arrow. His bow is safely slung on his back and inactive. Make the central action a curse ritual: his left palm raised and open, fingers spread, conjuring a dense floating orb of sickly green and violet venom runes and coiling fumes; his other hand tips a small poison vial downward into the magical circle. His stern face and upper torso remain clearly visible. Shadowy cursed victim silhouettes may writhe behind the orb, but there is no projectile attack and no weapon in either hand."
+  }
+]

@@ -61,3 +61,10 @@ local.properties
 
 # Miscellaneous
 captures/
+
+# Per-developer Cloud Run address; credentials must not be stored here.
+pas-cloud.properties
+
+output/imagegen/*.zip
+
+output/imagegen/*.zip

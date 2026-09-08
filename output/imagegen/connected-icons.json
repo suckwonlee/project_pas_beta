@@ -1,0 +1,372 @@
+[
+  {
+    "id": "slash",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_slash_v2.png",
+    "filename": "skill_hero_slash_v2.png"
+  },
+  {
+    "id": "shield_art",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_shield_art_v2.png",
+    "filename": "skill_hero_shield_art_v2.png"
+  },
+  {
+    "id": "sword_faith",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_sword_faith_v2.png",
+    "filename": "skill_hero_sword_faith_v2.png"
+  },
+  {
+    "id": "defend",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_defend_v2.png",
+    "filename": "skill_hero_defend_v2.png"
+  },
+  {
+    "id": "weapon_guard",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_weapon_guard_v2.png",
+    "filename": "skill_hero_weapon_guard_v2.png"
+  },
+  {
+    "id": "unyielding_faith",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_unyielding_faith_v2.png",
+    "filename": "skill_hero_unyielding_faith_v2.png"
+  },
+  {
+    "id": "head_bash",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_head_bash_v2.png",
+    "filename": "skill_hero_head_bash_v2.png"
+  },
+  {
+    "id": "first_aid",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_first_aid_v2.png",
+    "filename": "skill_hero_first_aid_v2.png"
+  },
+  {
+    "id": "certain_strike",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_certain_strike_v2.png",
+    "filename": "skill_hero_certain_strike_v2.png"
+  },
+  {
+    "id": "defense_focus",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_defense_focus_v2.png",
+    "filename": "skill_hero_defense_focus_v2.png"
+  },
+  {
+    "id": "guardian_aura",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_guardian_aura_v3.png",
+    "filename": "skill_hero_guardian_aura_v3.png"
+  },
+  {
+    "id": "battle_cry",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_battle_cry_v3.png",
+    "filename": "skill_hero_battle_cry_v3.png"
+  },
+  {
+    "id": "stone_throw",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_stone_throw_v2.png",
+    "filename": "skill_hero_stone_throw_v2.png"
+  },
+  {
+    "id": "mangle",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_mangle_v2.png",
+    "filename": "skill_hero_mangle_v2.png"
+  },
+  {
+    "id": "reckless_charge",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_reckless_charge_v2.png",
+    "filename": "skill_hero_reckless_charge_v2.png"
+  },
+  {
+    "id": "resolve",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_resolve_v2.png",
+    "filename": "skill_hero_resolve_v2.png"
+  },
+  {
+    "id": "full_will",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_full_will_v2.png",
+    "filename": "skill_hero_full_will_v2.png"
+  },
+  {
+    "id": "hero_swordsmanship",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_swordsmanship_v7.png",
+    "filename": "skill_hero_swordsmanship_v7.png"
+  },
+  {
+    "id": "judgment",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_judgment.png",
+    "filename": "skill_judgment.png"
+  },
+  {
+    "id": "salvation_vow",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hero_salvation_vow_v4.png",
+    "filename": "skill_hero_salvation_vow_v4.png"
+  },
+  {
+    "id": "archery",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_archery.png",
+    "filename": "skill_hunter_archery.png"
+  },
+  {
+    "id": "rapid_fire",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_rapid_fire.png",
+    "filename": "skill_hunter_rapid_fire.png"
+  },
+  {
+    "id": "brow_shot",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_brow_shot_v2.png",
+    "filename": "skill_hunter_brow_shot_v2.png"
+  },
+  {
+    "id": "hunter_defend",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_defend.png",
+    "filename": "skill_hunter_defend.png"
+  },
+  {
+    "id": "evasion_focus",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_evasion_focus_v2.png",
+    "filename": "skill_hunter_evasion_focus_v2.png"
+  },
+  {
+    "id": "emergency_escape",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_emergency_escape_v2.png",
+    "filename": "skill_hunter_emergency_escape_v2.png"
+  },
+  {
+    "id": "fixed_trap",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_fixed_trap_v2.png",
+    "filename": "skill_hunter_fixed_trap_v2.png"
+  },
+  {
+    "id": "stealth_movement",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_stealth_movement_v2.png",
+    "filename": "skill_hunter_stealth_movement_v2.png"
+  },
+  {
+    "id": "cold_aim",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_cold_aim_v2.png",
+    "filename": "skill_hunter_cold_aim_v2.png"
+  },
+  {
+    "id": "venom_injection",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_venom_injection.png",
+    "filename": "skill_hunter_venom_injection.png"
+  },
+  {
+    "id": "piercing_shot",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_piercing_shot_v2.png",
+    "filename": "skill_hunter_piercing_shot_v2.png"
+  },
+  {
+    "id": "install_decoy",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_install_decoy_v2.png",
+    "filename": "skill_hunter_install_decoy_v2.png"
+  },
+  {
+    "id": "swift_movement",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_swift_movement_v2.png",
+    "filename": "skill_hunter_swift_movement_v2.png"
+  },
+  {
+    "id": "venom_chase",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_venom_chase_v2.png",
+    "filename": "skill_hunter_venom_chase_v2.png"
+  },
+  {
+    "id": "execution_shot",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_execution_shot.png",
+    "filename": "skill_hunter_execution_shot.png"
+  },
+  {
+    "id": "joint_shot",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_joint_shot.png",
+    "filename": "skill_hunter_joint_shot.png"
+  },
+  {
+    "id": "solitude",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_solitude_v2.png",
+    "filename": "skill_hunter_solitude_v2.png"
+  },
+  {
+    "id": "arrow_rain",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_arrow_rain_v2.png",
+    "filename": "skill_hunter_arrow_rain_v2.png"
+  },
+  {
+    "id": "deadly_poison_curse",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_deadly_poison_curse_v4.png",
+    "filename": "skill_hunter_deadly_poison_curse_v4.png"
+  },
+  {
+    "id": "shadow_chase",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/hero-hunter-style-review-20260904/final/skill_hunter_shadow_chase_v2.png",
+    "filename": "skill_hunter_shadow_chase_v2.png"
+  },
+  {
+    "id": "blessing_of_resolve",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_blessing_of_resolve.png",
+    "filename": "skill_cleric_blessing_of_resolve.png"
+  },
+  {
+    "id": "healing_touch",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_healing_touch.png",
+    "filename": "skill_cleric_healing_touch.png"
+  },
+  {
+    "id": "absolution",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_absolution.png",
+    "filename": "skill_cleric_absolution.png"
+  },
+  {
+    "id": "blessing_of_life",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_blessing_of_life.png",
+    "filename": "skill_cleric_blessing_of_life.png"
+  },
+  {
+    "id": "blessing_of_courage",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_blessing_of_courage.png",
+    "filename": "skill_cleric_blessing_of_courage.png"
+  },
+  {
+    "id": "healing_wave",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_healing_wave.png",
+    "filename": "skill_cleric_healing_wave.png"
+  },
+  {
+    "id": "heavenly_passage",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_heavenly_passage.png",
+    "filename": "skill_cleric_heavenly_passage.png"
+  },
+  {
+    "id": "baptism_of_purification",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_baptism_of_purification.png",
+    "filename": "skill_cleric_baptism_of_purification.png"
+  },
+  {
+    "id": "withdraw_grace",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_withdraw_grace.png",
+    "filename": "skill_cleric_withdraw_grace.png"
+  },
+  {
+    "id": "answered_prayer",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_answered_prayer.png",
+    "filename": "skill_cleric_answered_prayer.png"
+  },
+  {
+    "id": "crusade",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_crusade.png",
+    "filename": "skill_cleric_crusade.png"
+  },
+  {
+    "id": "sanctuary",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_sanctuary.png",
+    "filename": "skill_cleric_sanctuary.png"
+  },
+  {
+    "id": "divine_fragment",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_divine_fragment.png",
+    "filename": "skill_cleric_divine_fragment.png"
+  },
+  {
+    "id": "divine_punishment",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_cleric_divine_punishment.png",
+    "filename": "skill_cleric_divine_punishment.png"
+  },
+  {
+    "id": "mana_discharge",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_mana_discharge.png",
+    "filename": "skill_wizard_mana_discharge.png"
+  },
+  {
+    "id": "gluttonous_hand",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_gluttonous_hand.png",
+    "filename": "skill_wizard_gluttonous_hand.png"
+  },
+  {
+    "id": "nether_repulsion",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_nether_repulsion.png",
+    "filename": "skill_wizard_nether_repulsion.png"
+  },
+  {
+    "id": "magic_ward",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_magic_ward.png",
+    "filename": "skill_wizard_magic_ward.png"
+  },
+  {
+    "id": "chaos_distortion",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_chaos_distortion.png",
+    "filename": "skill_wizard_chaos_distortion.png"
+  },
+  {
+    "id": "devour",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_devour.png",
+    "filename": "skill_wizard_devour.png"
+  },
+  {
+    "id": "mana_disruption",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_mana_disruption.png",
+    "filename": "skill_wizard_mana_disruption.png"
+  },
+  {
+    "id": "phantom_body",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_phantom_body.png",
+    "filename": "skill_wizard_phantom_body.png"
+  },
+  {
+    "id": "mana_payment",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_mana_payment.png",
+    "filename": "skill_wizard_mana_payment.png"
+  },
+  {
+    "id": "abyssal_mark",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_abyssal_mark.png",
+    "filename": "skill_wizard_abyssal_mark.png"
+  },
+  {
+    "id": "dimensional_drift",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_dimensional_drift.png",
+    "filename": "skill_wizard_dimensional_drift.png"
+  },
+  {
+    "id": "otherworld_power",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_otherworld_power.png",
+    "filename": "skill_wizard_otherworld_power.png"
+  },
+  {
+    "id": "hungry_star",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_hungry_star.png",
+    "filename": "skill_wizard_hungry_star.png"
+  },
+  {
+    "id": "past_echo",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_past_echo.png",
+    "filename": "skill_wizard_past_echo.png"
+  },
+  {
+    "id": "spell_theft",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_spell_theft.png",
+    "filename": "skill_wizard_spell_theft.png"
+  },
+  {
+    "id": "existence_loan",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_existence_loan.png",
+    "filename": "skill_wizard_existence_loan.png"
+  },
+  {
+    "id": "infinite_fragment",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_infinite_fragment.png",
+    "filename": "skill_wizard_infinite_fragment.png"
+  },
+  {
+    "id": "double_cast",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_double_cast.png",
+    "filename": "skill_wizard_double_cast.png"
+  },
+  {
+    "id": "meteor_shower",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_meteor_shower.png",
+    "filename": "skill_wizard_meteor_shower.png"
+  },
+  {
+    "id": "otherworld_gate",
+    "source": "C:/Users/USER/AndroidStudioProjects/project_pas/output/imagegen/cleric-wizard-20260904/skill_wizard_otherworld_gate.png",
+    "filename": "skill_wizard_otherworld_gate.png"
+  }
+]

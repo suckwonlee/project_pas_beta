@@ -18,7 +18,7 @@ public final class BattleState {
     private final List<BattleSanctuary> sanctuaries=new ArrayList<>();
     private final WizardBattleState wizardState=new WizardBattleState();
     private int round=1,turnIndex=-1,reviveResourceCount;
-    private boolean multiplayer;
+    private boolean networkCoop;
     private PotionInventory potionInventory=PotionInventory.empty();
     private BattleOutcome outcome=BattleOutcome.ONGOING;
     private List<BattleUnit> roundOrder=new ArrayList<>();
@@ -29,7 +29,11 @@ public final class BattleState {
     public List<BattleUnit> getRoundOrder(){return roundOrder;} public void setRoundOrder(List<BattleUnit> value){roundOrder=new ArrayList<>(value);}
     public BattleOutcome getOutcome(){return outcome;} public void setOutcome(BattleOutcome v){outcome=v;}
     public int getReviveResourceCount(){return reviveResourceCount;} public void setReviveResourceCount(int v){reviveResourceCount=Math.max(0,v);}
-    public boolean isMultiplayer(){return multiplayer;} public void setMultiplayer(boolean value){multiplayer=value;}
+    public boolean isNetworkCoop(){return networkCoop;} public void setNetworkCoop(boolean value){networkCoop=value;}
+    /** @deprecated 캐릭터 수가 아니라 네트워크 협동 여부를 뜻한다. */
+    @Deprecated public boolean isMultiplayer(){return isNetworkCoop();}
+    /** @deprecated 새 코드는 setNetworkCoop을 사용한다. */
+    @Deprecated public void setMultiplayer(boolean value){setNetworkCoop(value);}
     public PotionInventory getPotionInventory(){return potionInventory;} public void setPotionInventory(PotionInventory value){potionInventory=value==null?PotionInventory.empty():value;}
     public void log(String line){logs.add(line);} public List<String> getLogs(){return Collections.unmodifiableList(logs);}
     public List<BattleTrap> getTraps(){return Collections.unmodifiableList(traps);} public void addTrap(BattleTrap trap){if(trap!=null)traps.add(trap);} public void removeTrap(BattleTrap trap){traps.remove(trap);}

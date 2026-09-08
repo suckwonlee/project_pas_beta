@@ -1,0 +1,402 @@
+[
+  {
+    "character": "hero",
+    "name": "참격",
+    "grade": "NORMAL",
+    "decision": "revised",
+    "file": "final/skill_hero_slash_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "5753C94BA32341C1C5C1303339F698E92124DD59D68C241521E04B76F6F32305"
+  },
+  {
+    "character": "hero",
+    "name": "방패술",
+    "grade": "NORMAL",
+    "decision": "revised",
+    "file": "final/skill_hero_shield_art_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "D713A1E64807C8A3E9035D58F79FA2C011804BDD688AD166E1F49EB1243AF49F"
+  },
+  {
+    "character": "hero",
+    "name": "신념의 검",
+    "grade": "NORMAL",
+    "decision": "revised",
+    "file": "final/skill_hero_sword_faith_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "19A7D5DE24EFEB4878B8204F3D531AB78923B809B14A17521688DB788C10B19A"
+  },
+  {
+    "character": "hero",
+    "name": "방어",
+    "grade": "NORMAL",
+    "decision": "revised",
+    "file": "final/skill_hero_defend_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "9165DA213D56934BC8BA704F0D03CD0532EBAD526166E3134042426E185F6D76"
+  },
+  {
+    "character": "hero",
+    "name": "무기방어술",
+    "grade": "NORMAL",
+    "decision": "revised",
+    "file": "final/skill_hero_weapon_guard_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "5CE331D2B06FFB8DDB4C137412E01BFC38B399AECAB5B05C5BFBCADF47F15D7F"
+  },
+  {
+    "character": "hero",
+    "name": "불굴의 신념",
+    "grade": "NORMAL",
+    "decision": "revised",
+    "file": "final/skill_hero_unyielding_faith_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "D5BBBE006A2D3EB5609C13265169028AFA5D3F6ED3924F1B40A472C1B2AB14CE"
+  },
+  {
+    "character": "hero",
+    "name": "머리 강타",
+    "grade": "UNCOMMON",
+    "decision": "revised",
+    "file": "final/skill_hero_head_bash_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "AC195811BC5E7EADC2BAB6EF3437B038BFE1B16379390FC6653F5ACE28540A24"
+  },
+  {
+    "character": "hero",
+    "name": "응급 처치",
+    "grade": "UNCOMMON",
+    "decision": "revised",
+    "file": "final/skill_hero_first_aid_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "7A7FB21D294F36DF9E0F960C449A8CFFF64DEEC2042339DB398B70687A3F8B08"
+  },
+  {
+    "character": "hero",
+    "name": "확신의 검격",
+    "grade": "UNCOMMON",
+    "decision": "revised",
+    "file": "final/skill_hero_certain_strike_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "EF6E23CF211788156CD59C3037A2D657EAB2F28FB4E1953EBB34D49C4B1718F8"
+  },
+  {
+    "character": "hero",
+    "name": "방어전념",
+    "grade": "UNCOMMON",
+    "decision": "revised",
+    "file": "final/skill_hero_defense_focus_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "624A0E0A5BB01A216A2AFF391FCDA372DD62383C91CE0ED01531B7923112E8FB"
+  },
+  {
+    "character": "hero",
+    "name": "수호의 오라",
+    "grade": "MAGIC",
+    "decision": "revised",
+    "file": "final/skill_hero_guardian_aura_v3.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "D3470F65F5B13DD732C6DF4F60DE5ADE8A590CD5297125B130AE31B9A08B1F82"
+  },
+  {
+    "character": "hero",
+    "name": "전투의 함성",
+    "grade": "MAGIC",
+    "decision": "revised",
+    "file": "final/skill_hero_battle_cry_v3.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "E7E156CACDA9CCD31BD2969FEF4B2BD655389D3A73A793D696F835FFADA34B5B"
+  },
+  {
+    "character": "hero",
+    "name": "돌팔매",
+    "grade": "MAGIC",
+    "decision": "revised",
+    "file": "final/skill_hero_stone_throw_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "52C40AB60DEDB248654C67E0926508B0381D94A80194710DB7D66C4F532A28D6"
+  },
+  {
+    "character": "hero",
+    "name": "난도질",
+    "grade": "EPIC",
+    "decision": "revised",
+    "file": "final/skill_hero_mangle_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "CECFFBC7EF4AFF52AAD0CA67CA10F7CE8C94B3AC88D2FEF9B05DA5AAEA246269"
+  },
+  {
+    "character": "hero",
+    "name": "저돌맹진",
+    "grade": "EPIC",
+    "decision": "revised",
+    "file": "final/skill_hero_reckless_charge_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "3117E51E54B8C1A1320B4DECDFAEDCED9758BBA1539E6290295E8847A42EC3F7"
+  },
+  {
+    "character": "hero",
+    "name": "결단의 각오",
+    "grade": "EPIC",
+    "decision": "revised",
+    "file": "final/skill_hero_resolve_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "8B17B37A21B026374EE4D7B5FC49AE8970AD6A1219B301F00C0FB2BBEC4BD999"
+  },
+  {
+    "character": "hero",
+    "name": "의지충만",
+    "grade": "LEGENDARY",
+    "decision": "revised",
+    "file": "final/skill_hero_full_will_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "91B922131AD18434868E5FC5B4352A095C45B57D4364B52C543498638C69B3D8"
+  },
+  {
+    "character": "hero",
+    "name": "용사 검법",
+    "grade": "LEGENDARY",
+    "decision": "revised",
+    "file": "final/skill_hero_swordsmanship_v7.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "B11F4D34E239001FAE4E0A51B28E718AB110C41F1A296394757112C2D17A7386"
+  },
+  {
+    "character": "hero",
+    "name": "정의의 심판",
+    "grade": "OTHERWORLD",
+    "decision": "retained",
+    "file": "final/skill_judgment.png",
+    "width": 1024,
+    "height": 1024,
+    "sha256": "A012D90501C6C171F627ACEE5BB96F1CB2E6B94139F8BBCD70979BE8718B01BF"
+  },
+  {
+    "character": "hero",
+    "name": "구원의 맹세",
+    "grade": "OTHERWORLD",
+    "decision": "revised",
+    "file": "final/skill_hero_salvation_vow_v4.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "1517EAD0AE57D482881D3B3A8C3BA616E01D614C7663BE83CDDED199AF266AF4"
+  },
+  {
+    "character": "hunter",
+    "name": "궁술",
+    "grade": "NORMAL",
+    "decision": "retained",
+    "file": "final/skill_hunter_archery.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "FBFF4E14DB8C174A30DC84B0E012B16CD70BA43C9E9E9C8C9B404E37CF486E2D"
+  },
+  {
+    "character": "hunter",
+    "name": "속사",
+    "grade": "NORMAL",
+    "decision": "retained",
+    "file": "final/skill_hunter_rapid_fire.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "1A5CE35719213EDB940E8A250F807BE0EAC049940268B11F46C48C4D4FAECB1C"
+  },
+  {
+    "character": "hunter",
+    "name": "미간 사격",
+    "grade": "NORMAL",
+    "decision": "revised",
+    "file": "final/skill_hunter_brow_shot_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "14F71484D03B5BDD5DA3CB9ABCCD4BAAD9B057E937EE563903D2F77617FEE0AA"
+  },
+  {
+    "character": "hunter",
+    "name": "방어",
+    "grade": "NORMAL",
+    "decision": "retained",
+    "file": "final/skill_hunter_defend.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "D71A9AF6F78E3F146A57115F06F550D2A5C38E023A5241F9D7EC72952FD0155E"
+  },
+  {
+    "character": "hunter",
+    "name": "회피 전념",
+    "grade": "NORMAL",
+    "decision": "revised",
+    "file": "final/skill_hunter_evasion_focus_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "A121EDEA9E8E08C3B9926716CDEBB83B11E6EBDD5BD41D08379DA31BC8EC1578"
+  },
+  {
+    "character": "hunter",
+    "name": "비상 탈출",
+    "grade": "NORMAL",
+    "decision": "revised",
+    "file": "final/skill_hunter_emergency_escape_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "FF6912246B78B036C39A4CC9F63A985E5C5A05B02FE961221885E97EAAD4F31B"
+  },
+  {
+    "character": "hunter",
+    "name": "고정덫",
+    "grade": "UNCOMMON",
+    "decision": "revised",
+    "file": "final/skill_hunter_fixed_trap_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "5994D29804615D35CC538B10DC665A5D0CAEF7C73E3FA0755974BFBCC093D912"
+  },
+  {
+    "character": "hunter",
+    "name": "은밀기동",
+    "grade": "UNCOMMON",
+    "decision": "revised",
+    "file": "final/skill_hunter_stealth_movement_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "A62C1A65B8B094259EDC7F78975A66E8AFD5ECDDCCE08B0EC450887C174C3F5C"
+  },
+  {
+    "character": "hunter",
+    "name": "냉혈한 조준",
+    "grade": "UNCOMMON",
+    "decision": "revised",
+    "file": "final/skill_hunter_cold_aim_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "24D8FFCA2B81E0F7D2BBB3CF6415BF862DABA71A546D829DA4D1FC13C36DE661"
+  },
+  {
+    "character": "hunter",
+    "name": "독액주입",
+    "grade": "UNCOMMON",
+    "decision": "retained",
+    "file": "final/skill_hunter_venom_injection.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "7B252F886E92CC2D594E08B5837AA305DBCBB3942B24DAADD14CB31C0C95DEE0"
+  },
+  {
+    "character": "hunter",
+    "name": "관통사",
+    "grade": "MAGIC",
+    "decision": "revised",
+    "file": "final/skill_hunter_piercing_shot_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "2D13BDCE79264C7D9C41B00A69C103CBEE455DBF0D699B8CE79C7055BE16CF27"
+  },
+  {
+    "character": "hunter",
+    "name": "미끼 설치",
+    "grade": "MAGIC",
+    "decision": "revised",
+    "file": "final/skill_hunter_install_decoy_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "CF8CBF9ADC75D85F64BA83F82A6C83B4876F598A3A2790508E70F32714C25A20"
+  },
+  {
+    "character": "hunter",
+    "name": "신속기동",
+    "grade": "MAGIC",
+    "decision": "revised",
+    "file": "final/skill_hunter_swift_movement_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "8C6168A41F09DF3575D32C00CCDAC70793D29CC7958C6CF08BACE13AD03F3426"
+  },
+  {
+    "character": "hunter",
+    "name": "추격의 맹독",
+    "grade": "EPIC",
+    "decision": "revised",
+    "file": "final/skill_hunter_venom_chase_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "2165C15735B4758D171DBBC3DA5655E3DC2646FE3EC51DA81C773A12BF381A92"
+  },
+  {
+    "character": "hunter",
+    "name": "처형 사격",
+    "grade": "EPIC",
+    "decision": "retained",
+    "file": "final/skill_hunter_execution_shot.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "033FAB62CBE8D4E810ECE1917CDC895D5B00C9BA2D549DF24DC86AD9FE9D27AD"
+  },
+  {
+    "character": "hunter",
+    "name": "관절 사격",
+    "grade": "EPIC",
+    "decision": "retained",
+    "file": "final/skill_hunter_joint_shot.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "A6882DA920F7B94C4EC2446F8169878D7390270957CC333A962C913E3B2DED4D"
+  },
+  {
+    "character": "hunter",
+    "name": "고독",
+    "grade": "LEGENDARY",
+    "decision": "revised",
+    "file": "final/skill_hunter_solitude_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "F73DDE7BE5F0B8A9C27CDA783011F9498227D379C9CB34E5C6B33DD17E590F37"
+  },
+  {
+    "character": "hunter",
+    "name": "화살비",
+    "grade": "LEGENDARY",
+    "decision": "revised",
+    "file": "final/skill_hunter_arrow_rain_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "3F536AEF89F4EC6D0CC9335223AA2CC598CA0002274E30784A185C88B6A8A012"
+  },
+  {
+    "character": "hunter",
+    "name": "극독의 저주",
+    "grade": "OTHERWORLD",
+    "decision": "revised",
+    "file": "final/skill_hunter_deadly_poison_curse_v4.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "6DA5F6E0C32EA7E73B86C61017EFF2095F22CDD35F4A2D42B8A2D1AC71B9D03A"
+  },
+  {
+    "character": "hunter",
+    "name": "그림자 추격",
+    "grade": "OTHERWORLD",
+    "decision": "revised",
+    "file": "final/skill_hunter_shadow_chase_v2.png",
+    "width": 1254,
+    "height": 1254,
+    "sha256": "53E6DEFF7E28DE59EA665DBDD82926A8061DB5692DBA1249E1BF56623628A4C8"
+  }
+]

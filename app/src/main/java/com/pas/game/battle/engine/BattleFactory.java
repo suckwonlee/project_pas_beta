@@ -9,11 +9,13 @@ import com.pas.game.character.CharacterData;
 import com.pas.game.passive.PassiveRepository;
 import com.pas.game.passive.PassiveRuntime;
 import com.pas.game.item.potion.PotionInventory;
+import com.pas.game.multiplayer.PlayerBattleSetup;
 import com.pas.game.unit.EnemyUnit;
 import com.pas.game.unit.PlayerUnit;
 import com.pas.game.skill.repository.EnemySkillRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 public final class BattleFactory {
     private BattleFactory() {}
@@ -27,10 +29,29 @@ public final class BattleFactory {
         return create(loadout,secondPlayer,upgrades,random,debug,runes,character,PotionInventory.empty());
     }
     public static BattleEngine create(List<SkillData> loadout,int secondPlayer,List<Integer> upgrades,RandomProvider random,DebugOptions debug,RuneLoadout runes,CharacterData character,PotionInventory potions){
-        BattleState state=new BattleState(); state.setMultiplayer(secondPlayer>0);state.setPotionInventory(potions); List<Integer> starts=Arrays.asList(1,2,5); List<Integer> enemyStarts=Arrays.asList(8,11,12);
-        String characterId=character==null?"HERO":character.getId();String characterName=character==null?"용사후보":character.getName();
-        PlayerUnit p1=createPlayer("P1_"+characterId+"_1",characterName+" P1",random.choose(starts),1,runes,character);equip(p1,loadout,upgrades);equipRunePassive(p1,runes,"rune:P1");equipStartingPassive(p1,character,"character:"+characterId);state.addUnit(p1);
-        if(secondPlayer>0){PlayerUnit p2=createPlayer("P2_"+characterId+"_1",characterName+" P2",random.choose(starts),2,runes,character);equip(p2,loadout,upgrades);equipRunePassive(p2,runes,"rune:P2");equipStartingPassive(p2,character,"character:"+characterId);state.addUnit(p2);}
+        List<PlayerBattleSetup> players=new ArrayList<>();
+        players.add(new PlayerBattleSetup(1,character,loadout,upgrades,runes));
+        if(secondPlayer>0)players.add(new PlayerBattleSetup(2,character,loadout,upgrades,runes));
+        return createParty(players,false,random,debug,potions);
+    }
+
+    /** 각 클라이언트가 캐릭터를 나눠 조종하는 네트워크 협동 전투를 만든다. */
+    public static BattleEngine createMultiplayer(List<PlayerBattleSetup> players,RandomProvider random,DebugOptions debug,PotionInventory potions){
+        return createParty(players,true,random,debug,potions);
+    }
+
+    /** 캐릭터 수와 접속자 수를 분리한다. networkCoop=false면 한 사람이 여러 캐릭터를 조종한다. */
+    public static BattleEngine createParty(List<PlayerBattleSetup> players,boolean networkCoop,RandomProvider random,DebugOptions debug,PotionInventory potions){
+        if(players==null||players.isEmpty())throw new IllegalArgumentException("at least one player is required");
+        BattleState state=new BattleState();state.setNetworkCoop(networkCoop);state.setPotionInventory(potions);
+        List<Integer> starts=new ArrayList<>(Arrays.asList(1,2,5));List<Integer> enemyStarts=Arrays.asList(8,11,12);
+        for(PlayerBattleSetup setup:players){
+            if(starts.isEmpty())throw new IllegalArgumentException("the current battle board supports up to 3 players");
+            CharacterData character=setup.getCharacter();String characterId=character==null?"HERO":character.getId();String characterName=character==null?"용사후보":character.getName();
+            int tile=starts.remove(random.nextInt(starts.size()));int slot=setup.getPlayerSlot();
+            PlayerUnit player=createPlayer("P"+slot+"_"+characterId+"_1",characterName+" P"+slot,tile,slot,setup.getRunes(),character);
+            equip(player,setup.getLoadout(),setup.getUpgrades());equipRunePassive(player,setup.getRunes(),"rune:P"+slot);equipStartingPassive(player,character,"character:"+characterId);state.addUnit(player);
+        }
         EnemyUnit enemy=new EnemyUnit("ENEMY_DUMMY_1","살아있는 허수아비",random.choose(enemyStarts));
         enemy.equip(new SkillRuntime(EnemySkillRepository.basicAttack(),0)); enemy.equip(new SkillRuntime(EnemySkillRepository.slam(),0)); state.addUnit(enemy);
         return new BattleEngine(state,random,debug);

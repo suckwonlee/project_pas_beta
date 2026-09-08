@@ -125,7 +125,7 @@ public final class Effects {
             (e,c,t,v)->e.applyStatus(t,new StatusEffect("JUSTICE_"+c.getUnitId(),StatusType.JUSTICE_DOT,c.getUnitId(),-1,v,false,false)),
             (c,t,v)->t==null?"대상 턴마다 최대 HP의 "+number(v)+"%만큼 피해 (최대 HP 100 기준 "+ceil(v)+")":"대상 턴마다 "+ceil(t.getMaxHp()*v/100.0)+"만큼 피해 (대상 최대 HP의 "+number(v)+"%)");}
     public static SkillEffect defenseFocusRestrictions(){return described(
-            (e,c,t,v)->{e.applyStatus(c,new StatusEffect("FOCUS_EVADE_"+c.getUnitId(),StatusType.EVASION_DISABLED,c.getUnitId(),2,0,false,true));if(e.getState().isMultiplayer())e.applyStatus(c,new StatusEffect("FOCUS_MOVE_"+c.getUnitId(),StatusType.MOVEMENT_DISABLED,c.getUnitId(),2,0,false,true));},
+            (e,c,t,v)->{e.applyStatus(c,new StatusEffect("FOCUS_EVADE_"+c.getUnitId(),StatusType.EVASION_DISABLED,c.getUnitId(),2,0,false,true));if(e.getState().isNetworkCoop())e.applyStatus(c,new StatusEffect("FOCUS_MOVE_"+c.getUnitId(),StatusType.MOVEMENT_DISABLED,c.getUnitId(),2,0,false,true));},
             (c,t,v)->"회피 불가 2턴 · 멀티플레이 시 이동 불가 2턴");}
     public static SkillEffect permanentMaxHpFlatReduction(){return described(
             (e,c,t,v)->e.applyStatus(c,new StatusEffect("SALVATION_"+c.getUnitId(),StatusType.FLAT_DAMAGE_REDUCTION,c.getUnitId(),-1,ceil(c.getMaxHp()*v/100.0),false,false)),

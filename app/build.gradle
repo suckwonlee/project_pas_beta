@@ -2,6 +2,21 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+// Only the public server address belongs in the APK. Never load a secret/API key here.
+def cloudSettings = new Properties()
+cloudSettings.load(new StringReader(providers.fileContents(rootProject.layout.projectDirectory.file('pas-cloud.properties')).asText.orElse('').get()))
+if (cloudSettings.keySet().any { it != 'pasServerUrl' }) {
+    throw new GradleException('pas-cloud.properties accepts only pasServerUrl. Do not put API keys in APK build settings.')
+}
+def configuredServerUrl = providers.gradleProperty('pasServerUrl').orElse(cloudSettings.getProperty('pasServerUrl', '')).get().trim()
+if (!configuredServerUrl.isEmpty()) {
+    def uri
+    try { uri = new URI(configuredServerUrl) } catch (Exception ignored) { throw new GradleException('pasServerUrl must be a valid HTTPS origin.') }
+    if (uri.scheme != 'https' || !uri.host || uri.userInfo || uri.query || uri.fragment || !(uri.path in ['', '/'])) {
+        throw new GradleException('pasServerUrl must be https://host[:port], without credentials, path, query, or fragment. Local HTTP is entered only in the debug screen.')
+    }
+}
+
 android {
     namespace 'com.pas.game'
     compileSdk {
@@ -14,8 +29,16 @@ android {
         targetSdk 37
         versionCode 1
         versionName "1.0"
+        buildConfigField 'String', 'PAS_SERVER_URL', '"' + configuredServerUrl + '"'
+        buildConfigField 'boolean', 'PAS_ONLINE_ENABLED', String.valueOf(!configuredServerUrl.isEmpty())
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildFeatures { buildConfig true }
+    testOptions {
+        unitTests.all {
+            systemProperty 'pasTestServerUrl', providers.gradleProperty('pasTestServerUrl').orElse('').get()
+        }
     }
 
     buildTypes {
@@ -34,7 +57,10 @@ android {
 dependencies {
     implementation libs.appcompat
     implementation libs.material
+    implementation libs.okhttp
+    implementation libs.gson
     testImplementation libs.junit
+    testImplementation libs.mockwebserver
     androidTestImplementation libs.espresso.core
     androidTestImplementation libs.ext.junit
 }

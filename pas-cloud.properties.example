@@ -1,0 +1,3 @@
+# Copy to pas-cloud.properties and set the deployed Cloud Run HTTPS URL once.
+# No keys, service-account JSON, passwords, or tokens in this file.
+pasServerUrl=

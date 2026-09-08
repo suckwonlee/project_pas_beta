@@ -10,5 +10,6 @@ public final class BattleDecoy {
     private int remainingOwnerTurns;
     public BattleDecoy(String id,String ownerUnitId,Team ownerTeam,int tile,int remainingOwnerTurns){this.id=id;this.ownerUnitId=ownerUnitId;this.ownerTeam=ownerTeam;this.tile=tile;this.remainingOwnerTurns=Math.max(1,remainingOwnerTurns);}
     public String getId(){return id;} public String getOwnerUnitId(){return ownerUnitId;} public Team getOwnerTeam(){return ownerTeam;} public int getTile(){return tile;}
+    public int getRemainingOwnerTurns(){return remainingOwnerTurns;}
     public boolean tickOwnerTurn(){remainingOwnerTurns--;return remainingOwnerTurns<=0;}
 }

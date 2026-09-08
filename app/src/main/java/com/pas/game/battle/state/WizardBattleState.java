@@ -50,5 +50,8 @@ public final class WizardBattleState {
     public void removeLoan(String id){loans.remove(id);}
     public Map<String,Drift> getDrifts(){return drifts;} public Map<String,Echo> getEchoes(){return echoes;}
     public List<Star> getStars(){return stars;} public List<Gate> getGates(){return gates;}
+    public Map<String,Integer> getDischargeUses(){return dischargeUses;}
+    public Map<String,Integer> getDoubleCastStacks(){return doubleCastStacks;}
+    public Map<String,Loan> getLoans(){return loans;}
     public String getPendingReturnOwnerId(){return pendingReturnOwnerId;} public void setPendingReturnOwnerId(String value){pendingReturnOwnerId=value;}
 }

@@ -3,6 +3,7 @@ package com.pas.game.battle.engine;
 import com.pas.game.battle.command.BattleCommand;
 import com.pas.game.battle.command.EndTurnCommand;
 import com.pas.game.battle.command.MoveCommand;
+import com.pas.game.battle.command.ResolveWizardReturnCommand;
 import com.pas.game.battle.command.UseSkillCommand;
 import com.pas.game.battle.command.UsePotionCommand;
 import com.pas.game.battle.damage.DamageType;
@@ -63,9 +64,11 @@ public final class BattleEngine {
     }
 
     public BattleResult execute(BattleCommand command){
+        if(command==null)return BattleResult.error("명령이 없습니다.");
         if(state.getOutcome()!=BattleOutcome.ONGOING)return BattleResult.error("이미 전투가 종료되었습니다.");
         BattleUnit active=activeUnit();
         if(active==null||!active.getUnitId().equals(command.getActorUnitId()))return BattleResult.error("현재 행동 유닛의 명령이 아닙니다.");
+        if(command instanceof ResolveWizardReturnCommand)return resolveWizardReturn(active,(ResolveWizardReturnCommand)command);
         if(state.getWizardState().getPendingReturnOwnerId()!=null)return BattleResult.error("차원 표류의 복귀 위치를 먼저 선택하세요.");
         if(command instanceof MoveCommand)return move(active,(MoveCommand)command);
         if(command instanceof UseSkillCommand)return useSkill(active,(UseSkillCommand)command);
@@ -131,7 +134,20 @@ public final class BattleEngine {
 
     public boolean hasPendingWizardReturn(){return state.getWizardState().getPendingReturnOwnerId()!=null;}
     public List<Integer> validWizardReturnTiles(){List<Integer> result=new ArrayList<>();String id=state.getWizardState().getPendingReturnOwnerId();WizardBattleState.Drift drift=id==null?null:state.getWizardState().getDrifts().get(id);if(drift!=null)for(int tile:BattleGrid.adjacent(drift.originTile))result.add(tile);return result;}
-    public BattleResult resolveWizardReturn(int tile){String id=state.getWizardState().getPendingReturnOwnerId();WizardBattleState.Drift drift=id==null?null:state.getWizardState().getDrifts().get(id);BattleUnit unit=state.find(id);if(drift==null||unit==null)return BattleResult.error("복귀 대기 중인 마법사가 없습니다.");if(!BattleGrid.isValid(tile)||BattleGrid.distance(drift.originTile,tile)!=1)return BattleResult.error("원래 위치에서 정확히 1칸 떨어진 칸을 선택하세요.");unit.setTile(tile);unit.setOnField(true);unit.removeStatus(StatusType.DIMENSIONAL_DRIFT);state.getWizardState().getDrifts().remove(id);state.getWizardState().setPendingReturnOwnerId(null);log(unit.getName()+"이(가) 차원 표류에서 "+tile+"번 칸으로 복귀했습니다.");return continueBeginTurn(unit);}
+    /** @deprecated 복귀도 네트워크 명령으로 제출해야 한다. */
+    @Deprecated public BattleResult resolveWizardReturn(int tile){String id=state.getWizardState().getPendingReturnOwnerId();return execute(new ResolveWizardReturnCommand(id,tile));}
+
+    private BattleResult resolveWizardReturn(BattleUnit unit,ResolveWizardReturnCommand command){
+        String id=state.getWizardState().getPendingReturnOwnerId();
+        WizardBattleState.Drift drift=id==null?null:state.getWizardState().getDrifts().get(id);
+        if(drift==null||unit==null||!unit.getUnitId().equals(id))return BattleResult.error("복귀 대기 중인 마법사가 아닙니다.");
+        int tile=command.getDestinationTile();
+        if(!BattleGrid.isValid(tile)||BattleGrid.distance(drift.originTile,tile)!=1)return BattleResult.error("원래 위치에서 정확히 1칸 떨어진 칸을 선택하세요.");
+        unit.setTile(tile);unit.setOnField(true);unit.removeStatus(StatusType.DIMENSIONAL_DRIFT);
+        state.getWizardState().getDrifts().remove(id);state.getWizardState().setPendingReturnOwnerId(null);
+        log(unit.getName()+"이(가) 차원 표류에서 "+tile+"번 칸으로 복귀했습니다.");
+        return continueBeginTurn(unit);
+    }
 
     private void processTurnStartEffects(BattleUnit unit){
         List<StatusEffect> copy=new ArrayList<>(unit.getStatuses());
@@ -301,7 +317,7 @@ public final class BattleEngine {
         if(target==null||target.isDead())return 0;
         if(target instanceof WizardPhantom){WizardPhantom phantom=(WizardPhantom)target;consumePhantomElement(phantom,"피해");if(!phantom.isDead()){PassiveContext afterTaken=PassiveContext.damage(this,PassiveTrigger.AFTER_DAMAGE_TAKEN,attacker,target,damageType,1);afterTaken.setFinalDamage(1);dispatchPassives(target,PassiveTrigger.AFTER_DAMAGE_TAKEN,afterTaken);PassiveContext afterDealt=PassiveContext.damage(this,PassiveTrigger.AFTER_DAMAGE_DEALT,attacker,target,damageType,1);afterDealt.setFinalDamage(1);dispatchPassives(attacker,PassiveTrigger.AFTER_DAMAGE_DEALT,afterDealt);double venom=attacker==null?0:attacker.sumEffect(UnitEffectType.VENOM_COATING);if(damageType==DamageType.DIRECT&&venom>0)applyStatus(phantom,new StatusEffect("venom@"+attacker.getUnitId(),StatusType.POISON,attacker.getUnitId(),-1,venom,true,true));}return 0;}
         if(debug.isInvinciblePlayers()&&target.getTeam()==Team.PLAYER){log("디버그 무적: 피해 0");return 0;}
-        if(damageType==DamageType.DIRECT&&(target.has(StatusType.INVINCIBLE_DIRECT)||(!state.isMultiplayer()&&target.has(StatusType.DIVINE_FRAGMENT)))){log(target.getName()+"이(가) 무적으로 일반 피해를 막았습니다.");return 0;}
+        if(damageType==DamageType.DIRECT&&(target.has(StatusType.INVINCIBLE_DIRECT)||(!state.isNetworkCoop()&&target.has(StatusType.DIVINE_FRAGMENT)))){log(target.getName()+"이(가) 무적으로 일반 피해를 막았습니다.");return 0;}
         boolean critical=false,evaded=false;
         if(rollHit&&damageType==DamageType.DIRECT){
             int hitRoll=random.nextInt(100)+1;double hitChance=100-target.sum(StatusType.HIT_CHANCE_REDUCTION);if(hitRoll>hitChance)return 0;
@@ -495,7 +511,7 @@ public final class BattleEngine {
 
     public void activateDivineFragment(BattleUnit owner,int turns){owner.removeStatus(StatusType.DIVINE_FRAGMENT);owner.addStatus(new StatusEffect("DIVINE_FRAGMENT@"+owner.getUnitId(),StatusType.DIVINE_FRAGMENT,owner.getUnitId(),turns,0,false,false));log(owner.getName()+"이(가) 신성의 파편을 "+turns+"턴 동안 발동했습니다.");}
     private void processDivineFragmentTurnStart(BattleUnit unit){
-        if(state.isMultiplayer())for(BattleUnit caster:state.living(unit.getTeam()))if(caster.has(StatusType.DIVINE_FRAGMENT)&&BattleGrid.distance(caster.getTile(),unit.getTile())<=2){heal(unit,300,"신성의 파편");break;}
+        if(state.isNetworkCoop())for(BattleUnit caster:state.living(unit.getTeam()))if(caster.has(StatusType.DIVINE_FRAGMENT)&&BattleGrid.distance(caster.getTile(),unit.getTile())<=2){heal(unit,300,"신성의 파편");break;}
         if(unit.has(StatusType.DIVINE_FRAGMENT))unit.removeStatuses(unit.tickStatus(StatusType.DIVINE_FRAGMENT));
     }
     public void triggerClericJudgment(BattleUnit owner){for(BattleUnit enemy:enemiesOf(owner))if(BattleGrid.distance(owner.getTile(),enemy.getTile())<=1)dealDamage(owner,enemy,50,false,DamageType.TRUE_DAMAGE,"심판");for(BattleUnit ally:alliesInRange(owner,1))heal(ally,20,"심판");}
@@ -547,7 +563,7 @@ public final class BattleEngine {
     private void processOtherworldGates(BattleUnit active){for(WizardBattleState.Gate gate:new ArrayList<>(state.getWizardState().getGates()))if(gate.team!=active.getTeam()&&active.isOnField()&&!active.isDead()&&BattleGrid.distance(gate.tile,active.getTile())<=2)dealDamage(state.find(gate.ownerId),active,gate.damage,false,DamageType.TRUE_DAMAGE,"이계의 문");}
     private void processAbyssalMarks(BattleUnit attacker,BattleUnit target,DamageType type,int dealt){if(attacker==null||target==null||dealt<=0||type!=DamageType.DIRECT||executingSkill==null)return;for(StatusEffect mark:new ArrayList<>(target.getStatuses()))if(mark.getType()==StatusType.ABYSSAL_MARK){BattleUnit caster=state.find(mark.getSourceUnitId());if(caster==null||caster.getTeam()!=attacker.getTeam())continue;String key=mark.getId()+"@"+executingUseToken;if(!abyssalMarkUseKeys.add(key))continue;heal(attacker,ceilToInt(attacker.getAttack()*mark.getMagnitude()/100.0),"심연의 낙인");}}
     private void consumePhantomElement(WizardPhantom phantom,String element){boolean gone=phantom.consumeElement();log(phantom.getName()+"가 "+element+" 효과를 대신 받았습니다. (남은 내구 "+Math.max(0,phantom.getRemainingHits())+")");if(gone)state.removeUnit(phantom);}
-    private boolean hasUnstoppable(BattleUnit unit){return unit.has(StatusType.UNSTOPPABLE)||(!state.isMultiplayer()&&unit.has(StatusType.DIVINE_FRAGMENT));}
+    private boolean hasUnstoppable(BattleUnit unit){return unit.has(StatusType.UNSTOPPABLE)||(!state.isNetworkCoop()&&unit.has(StatusType.DIVINE_FRAGMENT));}
     public List<BattleUnit> enemiesOf(BattleUnit unit){return state.living(unit.getTeam()==Team.PLAYER?Team.ENEMY:Team.PLAYER);}
     public void log(String line){state.log(line);}
 
