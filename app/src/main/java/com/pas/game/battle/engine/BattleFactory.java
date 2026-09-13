@@ -44,7 +44,7 @@ public final class BattleFactory {
     public static BattleEngine createParty(List<PlayerBattleSetup> players,boolean networkCoop,RandomProvider random,DebugOptions debug,PotionInventory potions){
         if(players==null||players.isEmpty())throw new IllegalArgumentException("at least one player is required");
         BattleState state=new BattleState();state.setNetworkCoop(networkCoop);state.setPotionInventory(potions);
-        List<Integer> starts=new ArrayList<>(Arrays.asList(1,2,5));List<Integer> enemyStarts=Arrays.asList(8,11,12);
+        List<Integer> starts=new ArrayList<>(Arrays.asList(1,2,5));
         for(PlayerBattleSetup setup:players){
             if(starts.isEmpty())throw new IllegalArgumentException("the current battle board supports up to 3 players");
             CharacterData character=setup.getCharacter();String characterId=character==null?"HERO":character.getId();String characterName=character==null?"용사후보":character.getName();
@@ -52,8 +52,7 @@ public final class BattleFactory {
             PlayerUnit player=createPlayer("P"+slot+"_"+characterId+"_1",characterName+" P"+slot,tile,slot,setup.getRunes(),character);
             equip(player,setup.getLoadout(),setup.getUpgrades());equipRunePassive(player,setup.getRunes(),"rune:P"+slot);equipStartingPassive(player,character,"character:"+characterId);state.addUnit(player);
         }
-        EnemyUnit enemy=new EnemyUnit("ENEMY_DUMMY_1","살아있는 허수아비",random.choose(enemyStarts));
-        enemy.equip(new SkillRuntime(EnemySkillRepository.basicAttack(),0)); enemy.equip(new SkillRuntime(EnemySkillRepository.slam(),0)); state.addUnit(enemy);
+        state.addUnit(RedAltarEncounter.createBoss("ENEMY_RED_ALTAR_PRIEST_1",12));
         return new BattleEngine(state,random,debug);
     }
     private static PlayerUnit createPlayer(String id,String name,int tile,int slot,RuneLoadout runes,CharacterData character){return character==null?new PlayerUnit(id,name,tile,slot,runes):new PlayerUnit(id,name,tile,slot,runes,character.getMaxHp(),character.getAttack(),character.getDefense(),character.getCriticalRate(),character.getEvasionRate(),character.getPortraitResource());}

@@ -1,7 +1,7 @@
 package com.pas.game.status;
 
 public enum StatusType {
-    DAZED(ValueKind.DURATION), STIFF(ValueKind.DURATION), BIND(ValueKind.DURATION), UNSTOPPABLE(ValueKind.FLAT),
+    DAZED(ValueKind.DURATION), STIFF(ValueKind.DURATION), BIND(ValueKind.DURATION), UNSTOPPABLE(ValueKind.DURATION),
     POISON(ValueKind.FLAT), FIRE(ValueKind.FLAT), SHARP(ValueKind.PERCENT),
     DAMAGE_REDUCTION(ValueKind.PERCENT), CRIT_RATE_UP(ValueKind.PERCENTAGE_POINT), EVADE_UP(ValueKind.PERCENTAGE_POINT),
     TAUNT(ValueKind.DURATION), ATTACK_FLAT_UP(ValueKind.FLAT), ATTACK_UP(ValueKind.PERCENT), DAMAGE_TAKEN_UP(ValueKind.PERCENT),

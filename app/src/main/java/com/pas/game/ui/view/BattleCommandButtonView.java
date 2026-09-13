@@ -35,9 +35,12 @@ public final class BattleCommandButtonView extends FrameLayout {
     }
 
     public void bind(String text,int iconResource,SkillRuntime skill){
+        bindValues(text,iconResource,skill==null?-1:skill.getRemainingUses(),skill==null?-1:skill.getMaxUses(),skill==null?0:skill.getCooldownRemaining());
+    }
+    public void bindValues(String text,int iconResource,int remaining,int max,int cooldown){
         label.setText(text);iconBox.setVisibility(iconResource==0?GONE:VISIBLE);if(iconResource!=0)icon.setImageResource(iconResource);
-        int max=skill==null?-1:skill.getMaxUses();useBadge.setVisibility(max<0?GONE:VISIBLE);if(max>=0)useBadge.setText(skill.getRemainingUses()+"/"+max);
-        int cooldown=skill==null?0:skill.getCooldownRemaining();boolean cooling=cooldown>0;cooldownShade.setVisibility(cooling?VISIBLE:GONE);cooldownLabel.setVisibility(cooling?VISIBLE:GONE);cooldownLabel.setText(cooling?cooldown+"턴":"");
+        useBadge.setVisibility(max<0?GONE:VISIBLE);if(max>=0)useBadge.setText(remaining+"/"+max);
+        boolean cooling=cooldown>0;cooldownShade.setVisibility(cooling?VISIBLE:GONE);cooldownLabel.setVisibility(cooling?VISIBLE:GONE);cooldownLabel.setText(cooling?cooldown+"턴":"");
     }
     private int dp(int value){return Math.round(value*getResources().getDisplayMetrics().density);}
 }

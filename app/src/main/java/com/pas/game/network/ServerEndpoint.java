@@ -45,4 +45,5 @@ public final class ServerEndpoint {
         return origin.newBuilder().addPathSegments("ws/battle")
                 .addQueryParameter("roomCode", roomCode).build();
     }
+    public HttpUrl redeem() { return origin.newBuilder().addPathSegments("api/v1/auth/redeem").build(); }
 }

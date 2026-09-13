@@ -61,6 +61,7 @@ public final class RoomApiClient implements Closeable {
                     : "서버 요청 실패 (HTTP " + statusCode + ")");
             this.statusCode = statusCode;
         }
+        ApiException(int statusCode,String message) { super(message);this.statusCode=statusCode; }
     }
 
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -69,6 +70,7 @@ public final class RoomApiClient implements Closeable {
     private final OkHttpClient http;
     private final Executor callbacks;
     private final String betaKey;
+    private String playerToken;
     private volatile boolean closed;
 
     public RoomApiClient(ServerEndpoint endpoint, String betaKey, OkHttpClient http, Executor callbacks) {
@@ -86,6 +88,24 @@ public final class RoomApiClient implements Closeable {
         body.addProperty("nickname", nickname(nickname)); body.addProperty("mode", mode.name());
         request(endpoint.rooms(), "POST", body, null, true, Connection.class, result);
     }
+    public void setPlayerToken(String value) { playerToken = value; }
+    public static final class Identity { public String playerId; }
+    public static final class Left { public boolean left; }
+    public static final class SkillOptions { public long revision; public List<String> ids, labels; public String description; }
+    public void redeem(String code, String token, Result<Identity> result) {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("inviteCode", code); body.addProperty("deviceToken", token);
+        request(endpoint.redeem(), "POST", body, null, false, Identity.class, result);
+    }
+    public void leave(Connection c, Result<Left> result) {
+        request(endpoint.rooms(c.roomCode,"leave"), "POST", null, c, false, Left.class, result);
+    }
+    public void options(Connection c, String actor, String skill, String target, Result<SkillOptions> result) {
+        HttpUrl.Builder url = endpoint.rooms(c.roomCode,"skill-options").newBuilder()
+                .addQueryParameter("actorId",actor).addQueryParameter("skillId",skill);
+        if (target != null) url.addQueryParameter("targetId",target);
+        request(url.build(),"GET",null,c,false,SkillOptions.class,result);
+    }
     public void join(String roomCode, String nickname, Result<Connection> result) {
         com.google.gson.JsonObject body = new com.google.gson.JsonObject();
         body.addProperty("nickname", nickname(nickname));
@@ -95,6 +115,13 @@ public final class RoomApiClient implements Closeable {
         com.google.gson.JsonObject body = new com.google.gson.JsonObject();
         body.add("characters", gson.toJsonTree(characters));
         request(endpoint.rooms(c.roomCode, "players", c.clientId, "loadout"), "PUT", body, c, false, RoomStatus.class, result);
+    }
+    /** 일반 캐릭터 선택 화면에서 저장한 설정을 서버가 배정한 슬롯으로 보낸다. */
+    public void configureSelectedCharacter(Connection c, com.pas.game.multiplayer.PlayerBattleSetup selected, Result<RoomStatus> result) {
+        c.validate();
+        if (c.mode != Mode.COOP || c.playerSlots.size() != 1)
+            throw new IllegalArgumentException("2인 협동의 본인 캐릭터 설정만 보낼 수 있습니다.");
+        configure(c, java.util.Collections.singletonList(OnlineLoadoutMapper.from(selected, c.playerSlots.get(0))), result);
     }
     public void ready(Connection c, Result<RoomStatus> result) {
         request(endpoint.rooms(c.roomCode, "players", c.clientId, "ready"), "POST", null, c, false, RoomStatus.class, result);
@@ -108,13 +135,19 @@ public final class RoomApiClient implements Closeable {
         if (closed) { result.failure(new IOException("접속이 종료됐습니다.")); return; }
         Request.Builder request = new Request.Builder().url(url);
         if (beta && !betaKey.isEmpty()) request.header("X-PAS-BETA-KEY", betaKey);
+        if (beta && playerToken != null && !playerToken.isEmpty()) request.header("X-PAS-PLAYER-TOKEN", playerToken);
         if (c != null) { c.validate(); request.header("X-PAS-CLIENT", c.clientId).header("X-PAS-TOKEN", c.accessToken); }
         request.method(method, "GET".equals(method) ? null : RequestBody.create(gson.toJson(body), JSON));
         http.newCall(request.build()).enqueue(new okhttp3.Callback() {
             @Override public void onFailure(Call call, IOException e) { deliver(() -> result.failure(new IOException("서버에 연결하지 못했습니다. 주소와 네트워크를 확인하세요."))); }
             @Override public void onResponse(Call call, Response response) {
                 try (Response r = response) {
-                    if (!r.isSuccessful()) throw new ApiException(r.code());
+                    if (!r.isSuccessful()) {
+                        String message=null;
+                        try { if(r.body()!=null){com.google.gson.JsonObject error=gson.fromJson(r.body().string(),com.google.gson.JsonObject.class);if(error!=null&&error.has("message"))message=error.get("message").getAsString();} }catch(RuntimeException ignored){}
+                        if(message!=null&&!message.isEmpty()&&message.length()<=300)throw new ApiException(r.code(),message);
+                        throw new ApiException(r.code());
+                    }
                     if (r.body() == null) throw new IOException("서버 응답이 비어 있습니다.");
                     T value = gson.fromJson(r.body().string(), type);
                     if (value == null) throw new IOException("서버 응답이 비어 있습니다.");

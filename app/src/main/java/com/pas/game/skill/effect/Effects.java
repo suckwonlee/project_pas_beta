@@ -176,7 +176,7 @@ public final class Effects {
     public static SkillEffect answeredPrayer(){return described(
             (e,c,t,v)->e.reduceAllCooldowns(t,4),(c,t,v)->"대상의 모든 스킬 쿨타임 4턴 감소");}
     public static SkillEffect crusade(){return described(
-            (e,c,t,v)->{int hp=ceil(v),step=(int)steps(v,100,50),stat=10+step*5;for(BattleUnit ally:e.alliesInRange(c,1)){String source=c.getUnitId()+"@CRUSADE";ally.addStatus(new StatusEffect("CRUSADE_HP@"+source,StatusType.MAX_HP_UP,source,-1,hp,true,true));ally.increaseCurrentHpWithMax(hp);e.applyStatus(ally,new StatusEffect("CRUSADE_ATK@"+source,StatusType.ATTACK_FLAT_UP,source,-1,stat,true,true));e.applyStatus(ally,new StatusEffect("CRUSADE_DEF@"+source,StatusType.DEFENSE_FLAT_UP,source,-1,stat,true,true));}},
+            (e,c,t,v)->{int hp=ceil(v),step=(int)steps(v,100,50),stat=10+step*5;for(BattleUnit ally:e.alliesInRange(c,1)){String source=c.getUnitId()+"@CRUSADE";ally.addStatus(new StatusEffect("CRUSADE_HP@"+source,StatusType.MAX_HP_UP,source,-1,hp,true,true,"성전"));ally.increaseCurrentHpWithMax(hp);e.applyStatus(ally,new StatusEffect("CRUSADE_ATK@"+source,StatusType.ATTACK_FLAT_UP,source,-1,stat,true,true));e.applyStatus(ally,new StatusEffect("CRUSADE_DEF@"+source,StatusType.DEFENSE_FLAT_UP,source,-1,stat,true,true));}},
             (c,t,v)->{int step=(int)steps(v,100,50),stat=10+step*5;return "자신과 1칸 안의 모든 아군 최대 HP·현재 HP +"+ceil(v)+", 공격력·방어력 +"+stat+" · 중첩 · 전투 종료 시까지";});}
     public static SkillEffect sanctuary(){return described(
             (e,c,t,v)->e.installSanctuary(c,ceil(v),5),

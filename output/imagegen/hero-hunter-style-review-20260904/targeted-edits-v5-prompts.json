@@ -1,8 +1,0 @@
-{
-  "id": "hero_swordsmanship",
-  "name": "용사 검법",
-  "old": "skill_hero_swordsmanship_v4.png",
-  "filename": "skill_hero_swordsmanship_v5.png",
-  "reason": "캐릭터 비중을 줄이고 긴 검날과 원근을 더 과장해 검을 중심으로 부각",
-  "prompt": "Use case: precise-object-edit / stylized-concept.\nAsset type: one standalone square 1254x1254 RPG skill icon.\nInput image: the current approved Hero Swordsmanship icon; preserve the same blond young adult hero identity, silver plate armor with gold trim, red cape, heroic longsword Pflug / familiar Brave Sword Style First Form pose, pixel-art rendering, dark amber battle atmosphere, and thin clipped-corner gold frame.\nPrimary request: exaggerate the sword much more by changing only scale and framing. Make the hero's visible body and head smaller, occupying roughly 25–30% of the icon area and positioned in the lower-right quadrant. Extend the golden sword blade dramatically longer from the small two-handed grip in the lower-right all the way toward and almost touching the upper-left corner. The blade should span about 90% of the icon diagonal, with strong forced perspective: relatively narrow near the hands but extraordinarily long, broad, luminous and visually dominant toward the foreground. The blade must be the unmistakable main subject, covering more area than the character without hiding his face. Keep both hands on the hilt close to his torso and preserve the thrust-ready first-form silhouette.\nConstraints: one single coherent sword with normal guard and grip; no extra swords; no cross emblem on armor; no black empty background; no text, numerals, montage, logos, or watermark. Crisp deliberate square pixel clusters, not smooth painting."
-}

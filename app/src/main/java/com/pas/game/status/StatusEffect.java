@@ -9,6 +9,7 @@ public final class StatusEffect {
     private final StatusType type;
     private final String sourceUnitId;
     private final String sourceDisplayName;
+    private String displaySourceName;
     private int remainingTurns;
     private double magnitude;
     private int stackCount;
@@ -39,6 +40,9 @@ public final class StatusEffect {
     public StatusType getType() { return type; }
     public String getSourceUnitId() { return sourceUnitId; }
     public String getSourceDisplayName() { return sourceDisplayName; }
+    /** HUD provenance is separate from log wording and combat identity. */
+    public String getDisplaySourceName() { return displaySourceName == null ? sourceDisplayName : displaySourceName; }
+    public void identifyDisplaySource(String name) { if (getDisplaySourceName().isEmpty()) displaySourceName = name; }
     public int getRemainingTurns() { return remainingTurns; }
     public double getMagnitude() { return magnitude; }
     public int getStackCount() { return stackCount; }
@@ -58,5 +62,5 @@ public final class StatusEffect {
     public void decreaseMagnitude(double amount) { magnitude = Math.max(0, magnitude - Math.max(0, amount)); }
     public boolean consumeReinforcedFlag() { boolean value=reinforcedSinceOwnerTurn; reinforcedSinceOwnerTurn=false; return value; }
     public boolean consumeOncePerActorTurn(String token) { return consumedTurnTokens.add(token); }
-    public StatusEffect copy(String newId,String newSource){StatusEffect copy=new StatusEffect(newId,type,newSource,remainingTurns,magnitude,stackable,dispellable,sourceDisplayName);copy.stackCount=stackCount;return copy;}
+    public StatusEffect copy(String newId,String newSource){StatusEffect copy=new StatusEffect(newId,type,newSource,remainingTurns,magnitude,stackable,dispellable,sourceDisplayName);copy.stackCount=stackCount;copy.displaySourceName=displaySourceName;return copy;}
 }

@@ -1,5 +1,7 @@
 # Google Cloud 접속 설정
 
+> 최신 상태(2026-09-08)는 APP_SERVER_INTEGRATION.md / CLOUD_RESUME.md 참조. 서버는 비공개 배포 완료, 지인 인증은 개인별 1회용 초대 코드다. 아래의 공용 베타 키 입력 및 미배포 안내는 이전 절차다.
+
 ## API 키만 넣는다는 의미
 
 Google Cloud 관리용 API 키나 서비스 계정 JSON으로 PAS 전투 서버에 접속하는 구조가 아니다. Cloud Run에 PAS_server를 배포하고, **서버 주소를 앱 빌드 설정에 한 번 지정**한 뒤, 사용자는 **PAS 접속 키**만 입력한다. 방 생성/참가 후에는 서버가 발급한 방별 토큰으로 REST/WS를 사용한다.

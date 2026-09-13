@@ -79,9 +79,12 @@ public final class AuthoritativeBattleSession {
         BattleResult result=engine.execute(command);if(result.isSuccess()){runServerTurns();revision++;}return CommandReceipt.fromResult(envelope.getRequestId(),revision,result,currentSnapshot());
     }
     private void runServerTurns(){
-        if(enemyAI==null)return;int guard=0;
-        while(engine.getState().getOutcome()==com.pas.game.battle.state.BattleOutcome.ONGOING&&engine.activeUnit()!=null&&engine.activeUnit().getTeam()==Team.ENEMY&&guard++<32){BattleResult result=enemyAI.takeTurn(engine);if(!result.isSuccess())throw new IllegalStateException("server AI command failed: "+(result.getEvents().isEmpty()?"unknown":result.getEvents().get(0).getMessage()));}
-        if(guard>=32)throw new IllegalStateException("server AI turn guard exceeded");
+        if(enemyAI==null)return;Set<String> acted=new HashSet<>();
+        while(engine.getState().getOutcome()==com.pas.game.battle.state.BattleOutcome.ONGOING&&engine.activeUnit()!=null&&engine.activeUnit().getTeam()==Team.ENEMY){
+            String token=engine.getState().getRound()+":"+engine.activeUnit().getUnitId();
+            if(!acted.add(token))throw new IllegalStateException("server AI did not advance its turn");
+            BattleResult result=enemyAI.takeTurn(engine);if(!result.isSuccess())throw new IllegalStateException("server AI command failed: "+(result.getEvents().isEmpty()?"unknown":result.getEvents().get(0).getMessage()));
+        }
     }
     private CommandReceipt syncReceipt(String requestId){BattleSnapshot snapshot=currentSnapshot();return new CommandReceipt(MultiplayerProtocol.VERSION,requestId,true,CommandErrorCode.OK,"",revision,snapshot.toJson(),snapshot.getDigest());}
     private CommandReceipt reject(String requestId,CommandErrorCode code,String message){BattleSnapshot snapshot=currentSnapshot();return new CommandReceipt(MultiplayerProtocol.VERSION,requestId,false,code,message,revision,snapshot.toJson(),snapshot.getDigest());}

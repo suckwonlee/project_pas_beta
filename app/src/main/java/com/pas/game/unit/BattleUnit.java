@@ -85,12 +85,21 @@ public abstract class BattleUnit {
         }
         if(effect.getType()==StatusType.ABYSSAL_MARK){effect.setApplicationOrder(++statusSequence);statuses.add(effect);return;}
         for(StatusEffect current:statuses){
-            if(current.getType()==effect.getType() && same(current.getSourceUnitId(),effect.getSourceUnitId())){
+            if(current.getType()==effect.getType() && same(current.getSourceUnitId(),effect.getSourceUnitId())
+                    && (!separateStatSources(effect.getType()) || same(current.getId(),effect.getId()))){
                 if(effect.isStackable()){current.addMagnitude(effect.getMagnitude());current.setApplicationOrder(++statusSequence);return;}
                 current.refresh(effect.getRemainingTurns(),effect.getMagnitude());current.setApplicationOrder(++statusSequence); return;
             }
         }
         effect.setApplicationOrder(++statusSequence);statuses.add(effect);
+    }
+    private static boolean separateStatSources(StatusType type) {
+        switch (type) {
+            case ATTACK_FLAT_UP: case ATTACK_UP: case DEFENSE_FLAT_UP: case MAX_HP_UP:
+            case CRIT_RATE_UP: case EVADE_UP: case SHARP: case SKILL_HEAVY_ARMOR:
+                return true;
+            default: return false;
+        }
     }
     private boolean same(String a,String b){return a==null?b==null:a.equals(b);}
     public void removeStatus(StatusType type){for(Iterator<StatusEffect> i=statuses.iterator();i.hasNext();)if(i.next().getType()==type)i.remove();clampHpToMax();}

@@ -56,6 +56,7 @@ public final class OnlineTestActivity extends AppCompatActivity {
 
     @Override protected void onCreate(Bundle saved) {
         super.onCreate(saved);
+        if (!com.pas.game.config.BetaFeatures.SERVER_TEST_TOOLS) { finish(); return; }
         if (!BuildConfig.DEBUG && !BuildConfig.PAS_ONLINE_ENABLED) { finish(); return; }
         if (getSupportActionBar() != null) getSupportActionBar().hide();
         for (CharacterData c : new CharacterRepository().all()) if (c.isAvailable()) characters.add(c);

@@ -14,8 +14,7 @@ public final class ApprovedSkillIcons {
             case "purifying_flame": return R.drawable.skill_cleric_purifying_flame;
             case "shield_of_faith": return R.drawable.skill_cleric_shield_of_faith;
             case "healing_prayer": return R.drawable.skill_cleric_healing_prayer;
-            // TODO: 신성 개입 이미지 완성 후 임시 아이콘 교체.
-            case "divine_intervention": return R.drawable.placeholder_defense;
+            case "divine_intervention": return R.drawable.skill_cleric_divine_intervention;
             case "slash": return R.drawable.skill_hero_slash_v2;
             case "shield_art": return R.drawable.skill_hero_shield_art_v2;
             case "sword_faith": return R.drawable.skill_hero_sword_faith_v2;

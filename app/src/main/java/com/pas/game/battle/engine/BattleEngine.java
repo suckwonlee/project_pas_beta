@@ -90,7 +90,7 @@ public final class BattleEngine {
             }
             if(state.getRoundOrder().isEmpty())return BattleResult.error("행동 가능한 유닛이 없습니다.");
             BattleUnit unit=state.getRoundOrder().get(index);
-            if(unit.isDead()||unit.getEligibleRound()>state.getRound())continue;
+            if(state.find(unit.getUnitId())!=unit||unit.isDead()||unit.getEligibleRound()>state.getRound())continue;
             return beginTurn(unit);
         }
     }
@@ -360,6 +360,7 @@ public final class BattleEngine {
         int before=target.getHp(); int dealt=target.damage(afterBarrier);
         logDamageResult(target,cause,dealt,before);
         if(target.isDead())log(target.getName()+" 사망");
+        RedAltarEncounter.synchronize(this);
         PassiveContext afterTaken=PassiveContext.damage(this,PassiveTrigger.AFTER_DAMAGE_TAKEN,attacker,target,damageType,amount);afterTaken.setFinalDamage(dealt);
         dispatchPassives(target,PassiveTrigger.AFTER_DAMAGE_TAKEN,afterTaken);
         PassiveContext afterDealt=PassiveContext.damage(this,PassiveTrigger.AFTER_DAMAGE_DEALT,attacker,target,damageType,amount);afterDealt.setFinalDamage(dealt);
@@ -415,6 +416,7 @@ public final class BattleEngine {
     public void heal(BattleUnit target,int amount){int before=target.getHp();int healed=target.heal(amount);log(target.getName()+" 회복 "+healed+" ("+before+" → "+target.getHp()+")");}
     public void heal(BattleUnit target,int amount,String sourceDisplayName){int before=target.getHp();int healed=target.heal(amount);if(sourceDisplayName==null||sourceDisplayName.isEmpty())log(target.getName()+" 회복 "+healed+" ("+before+" → "+target.getHp()+")");else log(target.getName()+"이(가) "+sourceDisplayName+" 효과로 HP "+healed+"을 회복했습니다. ("+before+" → "+target.getHp()+")");}
     public void applyStatus(BattleUnit target,StatusEffect effect){
+        if(executingSkill!=null)effect.identifyDisplaySource(executingSkill.getData().getName());
         if(target instanceof WizardPhantom){if(target.isDead()||state.find(target.getUnitId())==null)return;target.addStatus(effect);consumePhantomElement((WizardPhantom)target,com.pas.game.status.StatusDisplay.label(effect.getType()));return;}
         String statusName=com.pas.game.status.StatusDisplay.label(effect.getType());
         if((effect.getType()==StatusType.DAZED||effect.getType()==StatusType.STIFF||effect.getType()==StatusType.BIND)&&hasUnstoppable(target)){log(target.getName()+": 저지불가로 "+statusName+" 효과를 막았습니다.");return;}
@@ -490,7 +492,7 @@ public final class BattleEngine {
     private void processPurificationExecution(BattleUnit unit){StatusEffect execution=findStatus(unit,StatusType.PURIFICATION_EXECUTION,null);if(execution==null||unit.isDead())return;unit.kill();log(unit.getName()+"이(가) 정화되어 즉사했습니다.");evaluateOutcome();}
 
     public void applyMaxHpBuff(BattleUnit caster,BattleUnit target,int amount,int turns,String id,boolean dispellable){
-        if(target==null||amount<=0)return;target.addStatus(new StatusEffect(id,StatusType.MAX_HP_UP,caster==null?null:caster.getUnitId(),turns,amount,true,dispellable));target.increaseCurrentHpWithMax(amount);log(target.getName()+" 최대 HP 및 현재 HP +"+amount);
+        if(target==null||amount<=0)return;StatusEffect effect=new StatusEffect(id,StatusType.MAX_HP_UP,caster==null?null:caster.getUnitId(),turns,amount,true,dispellable);if(executingSkill!=null)effect.identifyDisplaySource(executingSkill.getData().getName());target.addStatus(effect);target.increaseCurrentHpWithMax(amount);log(target.getName()+" 최대 HP 및 현재 HP +"+amount);
     }
 
     public void removeHighestStackDispellableDebuff(BattleUnit target){
@@ -570,6 +572,7 @@ public final class BattleEngine {
     private void evaluateOutcome(){
         if(state.getOutcome()!=BattleOutcome.ONGOING)return;
         cleanupWizardDeaths();if(state.getOutcome()!=BattleOutcome.ONGOING)return;
+        RedAltarEncounter.synchronize(this);
         boolean enemyAlive=false;for(BattleUnit u:state.getUnits())if(u.getTeam()==Team.ENEMY&&u.countsForOutcome()&&!u.isDead()){enemyAlive=true;break;}if(!enemyAlive){state.setOutcome(BattleOutcome.VICTORY);log("전투 승리");return;}
         List<BattleUnit> players=new ArrayList<>();for(BattleUnit u:state.getUnits())if(u.getTeam()==Team.PLAYER&&u.countsForOutcome())players.add(u);
         boolean anyDead=false,allDead=!players.isEmpty();for(BattleUnit p:players){anyDead|=p.isDead();allDead&=p.isDead();}

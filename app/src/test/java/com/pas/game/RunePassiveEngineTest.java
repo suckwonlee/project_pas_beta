@@ -28,12 +28,19 @@ public class RunePassiveEngineTest {
         for(EnemyUnit enemy:f.enemies){assertTrue(enemy.has(StatusType.FIRE));assertEquals(5,enemy.sum(StatusType.FIRE),0.001);}
     }
 
-    @Test public void willGrantsPermanentUnstoppable(){
+    @Test public void willExpiresAfterFiveOwnerTurnEndsNotEnemyTurnEnds(){
         Fixture f=fixture("guardian",1,1);f.engine.start();
         assertTrue(f.player.has(StatusType.UNSTOPPABLE));
         StatusEffect effect=findStatus(f.player,StatusType.UNSTOPPABLE);
-        assertTrue(effect!=null&&effect.isPermanent()&&!effect.isDispellable());
-        assertEquals(5,effect.getMagnitude(),0.001);
+        assertTrue(effect!=null&&!effect.isPermanent()&&!effect.isDispellable());
+        assertEquals(5,effect.getRemainingTurns());
+        for(int remaining=4;remaining>=0;remaining--){
+            f.engine.advanceTurn();
+            assertEquals(remaining,effect.getRemainingTurns());
+            assertEquals(remaining>0,f.player.has(StatusType.UNSTOPPABLE));
+            f.engine.advanceTurn();
+            assertEquals(remaining,effect.getRemainingTurns());
+        }
     }
 
     @Test public void frostGrantsNamedEffectAndFightingGrantsOrdinaryAttackBuff(){

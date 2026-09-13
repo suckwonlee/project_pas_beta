@@ -3,7 +3,7 @@ package com.pas.game.multiplayer;
 import com.pas.game.battle.engine.BattleEngine;
 import com.pas.game.battle.engine.BattleFactory;
 import com.pas.game.battle.engine.JavaRandomProvider;
-import com.pas.game.ai.TrainingDummyAI;
+import com.pas.game.ai.EncounterEnemyAI;
 import com.pas.game.debug.DebugOptions;
 import com.pas.game.item.potion.PotionInventory;
 import com.pas.game.unit.BattleUnit;
@@ -25,6 +25,6 @@ public final class MultiplayerMatchFactory {
         JavaRandomProvider random=new JavaRandomProvider(randomSeed);BattleEngine engine=BattleFactory.createParty(players,controllingClients.size()>1,random,debug==null?new DebugOptions():debug,potions==null?PotionInventory.empty():potions);
         Map<Integer,String> unitBySlot=new HashMap<>();for(BattleUnit unit:engine.getState().getUnits())if(unit instanceof PlayerUnit)unitBySlot.put(((PlayerUnit)unit).getPlayerSlot(),unit.getUnitId());
         Map<String,List<String>> ownership=new HashMap<>();for(ControlledPlayerSetup entry:roster)ownership.computeIfAbsent(entry.getClientId(),key->new ArrayList<>()).add(unitBySlot.get(entry.getPlayer().getPlayerSlot()));
-        return new AuthoritativeBattleSession(matchId,engine,ownership,new TrainingDummyAI(random));
+        return new AuthoritativeBattleSession(matchId,engine,ownership,new EncounterEnemyAI(random));
     }
 }
