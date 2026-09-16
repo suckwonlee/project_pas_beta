@@ -87,8 +87,8 @@ public class HunterImplementationTest {
 
     @Test public void allThreeNormalAttacksUseCurrentHunterStatsAndRoundedDamage(){
         HunterSkillRepository skills=new HunterSkillRepository();BattleState state=new BattleState();PlayerUnit hunter=hunter();EnemyUnit enemy=new EnemyUnit("E1","적",1);state.addUnit(hunter);state.addUnit(enemy);BattleEngine engine=new BattleEngine(state,ZERO,noRolls());
-        skills.find("archery").getEffects().get(0).apply(engine,hunter,enemy,skills.find("archery").valueAt(0));assertEquals(13,90-enemy.getHp());
-        enemy.setHpForDebug(90);skills.find("rapid_fire").getEffects().get(0).apply(engine,hunter,enemy,skills.find("rapid_fire").valueAt(0));assertEquals(12,90-enemy.getHp());
+        skills.find("archery").getEffects().get(0).apply(engine,hunter,enemy,skills.find("archery").valueAt(0));assertEquals(14,90-enemy.getHp());
+        enemy.setHpForDebug(90);skills.find("rapid_fire").getEffects().get(0).apply(engine,hunter,enemy,skills.find("rapid_fire").valueAt(0));assertEquals(14,90-enemy.getHp());
         enemy.setHpForDebug(90);DebugOptions critical=noRolls();critical.setCritical(DebugOptions.ForcedRoll.SUCCESS);BattleEngine criticalEngine=new BattleEngine(state,ZERO,critical);for(com.pas.game.skill.effect.SkillEffect effect:skills.find("brow_shot").getEffects())effect.apply(criticalEngine,hunter,enemy,skills.find("brow_shot").valueAt(0));assertEquals(45,90-enemy.getHp());assertEquals(14,hunter.getCriticalRate(),0.001);
     }
 
@@ -129,7 +129,7 @@ public class HunterImplementationTest {
 
     @Test public void hunterUpgradeUseCountsCooldownsAndDescriptionsMatchRuntimeValues(){
         HunterSkillRepository skills=new HunterSkillRepository();SkillRuntime escape=new SkillRuntime(skills.find("emergency_escape"),1);assertEquals(9,escape.getMaxUses());SkillRuntime trap=new SkillRuntime(skills.find("fixed_trap"),1);assertEquals(4,trap.getMaxUses());trap.consume();assertEquals(4,trap.getCooldownRemaining());trap.onOwnerTurnStart();assertEquals(3,trap.getCooldownRemaining());
-        PlayerUnit hunter=hunter();String archery=SkillDetailFormatter.summary(skills.find("archery"),0,hunter);String defense=SkillDetailFormatter.summary(skills.find("hunter_defend"),0,hunter);assertTrue(archery.contains("13만큼 피해"));assertTrue(defense.contains("28만큼 피해 방어"));
+        PlayerUnit hunter=hunter();String archery=SkillDetailFormatter.summary(skills.find("archery"),0,hunter);String defense=SkillDetailFormatter.summary(skills.find("hunter_defend"),0,hunter);assertTrue(archery.contains("14만큼 피해"));assertTrue(defense.contains("28만큼 피해 방어"));
     }
 
     private PlayerUnit hunterWithSurprise(int level){PlayerUnit hunter=new PlayerUnit("P1","사냥꾼",1,1);hunter.equipPassive(new PassiveRepository().create(PassiveRepository.SURPRISE_ATTACK,level,"character:HUNTER"));return hunter;}

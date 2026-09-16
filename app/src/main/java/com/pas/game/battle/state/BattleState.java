@@ -34,7 +34,14 @@ public final class BattleState {
     @Deprecated public boolean isMultiplayer(){return isNetworkCoop();}
     /** @deprecated 새 코드는 setNetworkCoop을 사용한다. */
     @Deprecated public void setMultiplayer(boolean value){setNetworkCoop(value);}
-    public PotionInventory getPotionInventory(){return potionInventory;} public void setPotionInventory(PotionInventory value){potionInventory=value==null?PotionInventory.empty():value;}
+    private final java.util.Map<Integer,PotionInventory> playerPotions=new java.util.HashMap<>();
+    public void setPlayerPotionInventory(int slot,PotionInventory inventory){playerPotions.put(slot,inventory);}
+    public PotionInventory getPotionInventory(){
+        BattleUnit active=find(turn.getActiveUnitId());
+        if(active instanceof com.pas.game.unit.PlayerUnit){PotionInventory owned=playerPotions.get(((com.pas.game.unit.PlayerUnit)active).getPlayerSlot());if(owned!=null)return owned;}
+        return potionInventory;
+    }
+    public void setPotionInventory(PotionInventory value){potionInventory=value==null?PotionInventory.empty():value;}
     public void log(String line){logs.add(line);} public List<String> getLogs(){return Collections.unmodifiableList(logs);}
     public List<BattleTrap> getTraps(){return Collections.unmodifiableList(traps);} public void addTrap(BattleTrap trap){if(trap!=null)traps.add(trap);} public void removeTrap(BattleTrap trap){traps.remove(trap);}
     public List<BattleDecoy> getDecoys(){return Collections.unmodifiableList(decoys);} public void addDecoy(BattleDecoy decoy){if(decoy!=null)decoys.add(decoy);} public void removeDecoy(BattleDecoy decoy){decoys.remove(decoy);}

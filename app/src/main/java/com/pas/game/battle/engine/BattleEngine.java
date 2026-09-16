@@ -126,9 +126,22 @@ public final class BattleEngine {
         boolean controlled=unit.has(StatusType.DAZED)||unit.has(StatusType.STIFF);
         boolean blocked=controlled&&!hasUnstoppable(unit);
         state.getTurn().begin(unit.getUnitId(),blocked);
+        if(!blocked&&unit.getTurnsStarted()==10){
+            for(PassiveRuntime passive:unit.getPassives())if(passive.isEnabled()&&com.pas.game.passive.PassiveRepository.GRAND_MAGIC.equals(passive.getData().getId())){
+                state.getTurn().addSkillAction();break;
+            }
+        }
         if(unit instanceof EnemyUnit)((EnemyUnit)unit).beginOwnTurn();
         String text="라운드 "+state.getRound()+" - "+unit.getName()+"의 턴"+(blocked?" (행동 불가)":"");
         log(text);
+        for(StatusEffect status:new ArrayList<>(unit.getStatuses())){
+            if(status.getType()==StatusType.HUNT_TURN_SKIP&&status.getMagnitude()>0){
+                status.decreaseMagnitude(1);
+                if(status.getMagnitude()<=0)unit.removeStatusEffect(status);
+                log(unit.getName()+"의 턴을 사냥 효과로 건너뜁니다.");
+                return advanceTurn();
+            }
+        }
         return BattleResult.ok().add(BattleEvent.Type.TURN_STARTED,text);
     }
 

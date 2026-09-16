@@ -28,8 +28,27 @@ public final class PassiveRepository {
     public static final String PURIFICATION="purification";
     public static final String JUDGMENT="cleric_judgment";
     public static final String MANA="wizard_mana";
+    public static final String FORTRESS="hero_fortress";
+    public static final String HUNT="hunter_hunt";
+    public static final String GRAND_MAGIC="wizard_grand_magic";
     private final Map<String,PassiveData> definitions=new LinkedHashMap<>();
     public PassiveRepository(){
+        register(new PassiveData(FORTRESS,"요새화","받는 일반 피해를 50만큼 감소시킵니다.",battleStart(),new double[]{50,50,50,50,50},
+            (context,owner,runtime)->grant(context,owner,runtime,UnitEffectType.HEAVY_ARMOR)));
+        register(new PassiveData(HUNT,"사냥","각 대상에게 피해를 준 즉발 공격 4타마다 대상의 다음 턴을 건너뜁니다. 저지불가를 무시합니다.",
+            Collections.singleton(PassiveTrigger.AFTER_DAMAGE_DEALT),new double[]{4,4,4,4,4},(context,owner,runtime)->{
+                BattleUnit target=context.getTarget();
+                if(target==null||target.isDead()||target.getTeam()==owner.getTeam()
+                    ||context.getDamageType()!=com.pas.game.battle.damage.DamageType.DIRECT||context.getFinalDamage()<=0)return;
+                if(runtime.countTargetHit(target.getUnitId(),4))
+                    context.getEngine().applyStatus(target,new StatusEffect(runtime.getRuntimeKey()+"@"+target.getUnitId(),
+                        StatusType.HUNT_TURN_SKIP,owner.getUnitId(),-1,1,true,true,runtime.getDisplayName()));
+            }));
+        register(new PassiveData(GRAND_MAGIC,"대마법","자신의 10번째 턴에만 공격력 100 증가와 행동권 총 2회를 얻습니다.",
+            Collections.singleton(PassiveTrigger.TURN_START),new double[]{100,100,100,100,100},(context,owner,runtime)->{
+                if(owner.getTurnsStarted()==10)context.getEngine().applyStatus(owner,new StatusEffect(runtime.getRuntimeKey(),
+                    StatusType.ATTACK_FLAT_UP,owner.getUnitId(),1,100,false,false,runtime.getDisplayName()));
+            }));
         register(new PassiveData(HEAVY_ARMOR,"중갑","받는 일반 피해를 %s만큼 감소시킵니다.",battleStart(),new double[]{2,4,7,11,16},(context,owner,runtime)->grant(context,owner,runtime,UnitEffectType.HEAVY_ARMOR)));
         register(new PassiveData(RUNE_FIRE,"방화","전투 시작 시 모든 적에게 화염 %s를 부여합니다.",battleStart(),new double[]{5,7,10,18,25},(context,owner,runtime)->{for(BattleUnit enemy:context.getEngine().enemiesOf(owner))context.getEngine().applyStatus(enemy,new StatusEffect(runtime.getRuntimeKey()+"@"+enemy.getUnitId(),StatusType.FIRE,owner.getUnitId(),-1,runtime.currentValue(),true,true,runtime.getDisplayName()));}));
         register(new PassiveData(RUNE_FROST,"중갑","받는 일반 피해를 %s만큼 감소시킵니다.",battleStart(),new double[]{2,4,7,11,16},(context,owner,runtime)->grant(context,owner,runtime,UnitEffectType.HEAVY_ARMOR)));

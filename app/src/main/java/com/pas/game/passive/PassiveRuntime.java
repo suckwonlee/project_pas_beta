@@ -10,6 +10,12 @@ public final class PassiveRuntime {
     private int level;
     private boolean enabled=true;
     private final Set<String> triggeredTargetIds=new HashSet<>();
+    private final java.util.Map<String,Integer> targetHitCounts=new java.util.HashMap<>();
+    /** Per-owner, per-battle and per-target counter. Counts wrap at the trigger interval. */
+    public boolean countTargetHit(String targetId,int interval){
+        int count=targetHitCounts.getOrDefault(targetId,0)+1;
+        targetHitCounts.put(targetId,count%interval);return count>=interval;
+    }
     public PassiveRuntime(PassiveData data,int level,String sourceKey){this.data=data;this.level=Math.max(1,level);this.sourceKey=sourceKey==null?"default":sourceKey;}
     public PassiveData getData(){return data;} public int getLevel(){return level;} public void setLevel(int value){level=Math.max(1,value);}
     public String getSourceKey(){return sourceKey;} public String getRuntimeKey(){return data.getId()+"@"+sourceKey;}

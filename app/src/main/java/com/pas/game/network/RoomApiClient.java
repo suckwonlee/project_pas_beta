@@ -130,6 +130,28 @@ public final class RoomApiClient implements Closeable {
         request(endpoint.rooms(c.roomCode), "GET", null, c, false, RoomStatus.class, result);
     }
 
+    /** Server support is required. No optimistic wallet/stat changes or local fallback. */
+    public void shop(Connection c,Result<ShopProtocol.Snapshot> result){
+        c.validate();request(endpoint.rooms(c.roomCode,"shop"),"GET",null,c,false,ShopProtocol.Snapshot.class,result);
+    }
+    public void purchase(Connection c,String requestId,long revision,String offerId,int playerSlot,String skillId,Result<ShopProtocol.Snapshot> result){
+        c.validate();
+        if(!c.playerSlots.contains(playerSlot))throw new IllegalArgumentException("본인 캐릭터에게만 구매할 수 있습니다.");
+        if(offerId==null||offerId.trim().isEmpty())throw new IllegalArgumentException("상품을 선택하세요.");
+        ShopProtocol.Mutation body=new ShopProtocol.Mutation(requestId,revision);
+        body.offerId=offerId;body.playerSlot=playerSlot;body.skillId=skillId;
+        request(endpoint.rooms(c.roomCode,"shop","purchase"),"POST",body,c,false,ShopProtocol.Snapshot.class,result);
+    }
+    public void refreshShop(Connection c,String requestId,long revision,Result<ShopProtocol.Snapshot> result){
+        c.validate();request(endpoint.rooms(c.roomCode,"shop","refresh"),"POST",new ShopProtocol.Mutation(requestId,revision),c,false,ShopProtocol.Snapshot.class,result);
+    }
+    public void transferGold(Connection c,String requestId,long revision,String recipientClientId,int amount,Result<ShopProtocol.Snapshot> result){
+        c.validate();
+        if(c.mode!=Mode.COOP||recipientClientId==null||recipientClientId.trim().isEmpty()||recipientClientId.equals(c.clientId)||amount<=0)
+            throw new IllegalArgumentException("같은 방의 다른 유저와 보낼 골드 수량을 확인하세요.");
+        ShopProtocol.Mutation body=new ShopProtocol.Mutation(requestId,revision);body.recipientClientId=recipientClientId;body.amount=amount;
+        request(endpoint.rooms(c.roomCode,"shop","transfer"),"POST",body,c,false,ShopProtocol.Snapshot.class,result);
+    }
     private <T> void request(HttpUrl url, String method, Object body, Connection c,
                              boolean beta, Class<T> type, Result<T> result) {
         if (closed) { result.failure(new IOException("접속이 종료됐습니다.")); return; }
@@ -152,6 +174,7 @@ public final class RoomApiClient implements Closeable {
                     T value = gson.fromJson(r.body().string(), type);
                     if (value == null) throw new IOException("서버 응답이 비어 있습니다.");
                     if (value instanceof Connection) ((Connection) value).validate();
+                    if (value instanceof ShopProtocol.Snapshot) ShopProtocol.validate((ShopProtocol.Snapshot)value);
                     deliver(() -> result.success(value));
                 } catch (Exception e) { deliver(() -> result.failure(e)); }
             }

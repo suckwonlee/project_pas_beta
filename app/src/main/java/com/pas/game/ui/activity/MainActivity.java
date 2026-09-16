@@ -122,12 +122,14 @@ public final class MainActivity extends AppCompatActivity {
     private RuneData selectedRune1=runeRepository.primary("fighting"),selectedRune2=runeRepository.secondary("smash");
     private int chapter=1;
     private PotionInventory adventurePotions;
+    private com.pas.game.shop.ShopSession shopSession;
     private int selectedRune1Level=1,selectedRune2Level=1;
     private PlayMode playMode=PlayMode.SINGLE_ONE;
     private final PartySelection partySelection=new PartySelection();
     private int editingPartySlot=1;
     private ImageView playerPortrait;
     private OnlineCoopFlow onlineFlow;
+    private com.pas.game.ui.shop.RemoteShopScreen remoteShop;
 
     private final String[] continentNames={"남대륙","동대륙","서대륙","북대륙","중앙대륙"};
     private final String[] continentDescriptions={
@@ -139,7 +141,24 @@ public final class MainActivity extends AppCompatActivity {
     };
     private final int[] continentImages={R.drawable.south,R.drawable.east,R.drawable.west,R.drawable.north,R.drawable.central};
 
-    @Override protected void onCreate(Bundle savedInstanceState){super.onCreate(savedInstanceState);if(getSupportActionBar()!=null)getSupportActionBar().hide();getOnBackPressedDispatcher().addCallback(this,new OnBackPressedCallback(true){@Override public void handleOnBackPressed(){handleBackNavigation();}});ensureCharacterLoadout(characterRepository.all().get(selectedCharacterIndex));adventurePotions=new PotionInventory(potionRepository.forChapter(chapter),0);showMain();}
+@Override protected void onCreate(Bundle savedInstanceState){super.onCreate(savedInstanceState);if(getSupportActionBar()!=null)getSupportActionBar().hide();getOnBackPressedDispatcher().addCallback(this,new OnBackPressedCallback(true){@Override public void handleOnBackPressed(){handleBackNavigation();}});ensureCharacterLoadout(characterRepository.all().get(selectedCharacterIndex));adventurePotions=new PotionInventory(potionRepository.forChapter(chapter),0);if(savedInstanceState!=null&&savedInstanceState.containsKey("pas.shop")){
+            try{
+                shopSession=com.pas.game.shop.ShopSession.restore(new com.google.gson.Gson().fromJson(savedInstanceState.getString("pas.shop"),com.pas.game.shop.ShopSession.Save.class));
+                playMode=shopSession.players().size()==2?PlayMode.SINGLE_PARTY:PlayMode.SINGLE_ONE;
+                adventurePotions=shopSession.potions();
+                // Selection presets remain pristine. Purchased bonuses belong only to this run.
+                for(PlayerBattleSetup p:shopSession.players()){
+                    CharacterData original=null;for(CharacterData c:characterRepository.all())if(c.getId().equals(p.getCharacter().getId()))original=c;
+                    partySelection.save(new PlayerBattleSetup(p.getPlayerSlot(),original,p.getLoadout(),java.util.Collections.nCopies(p.getLoadout().size(),0),p.getRunes()));
+                }
+                loadPartyEditor(1);showShop(this::enterPreparedBattle,"전투로 이동");return;
+            }catch(RuntimeException e){shopSession=null;}
+        }showMain();}
+    @Override protected void onSaveInstanceState(Bundle out){
+        super.onSaveInstanceState(out);
+        if(screenStage==6&&playMode!=PlayMode.ONLINE_COOP&&shopSession!=null)
+            out.putString("pas.shop",new com.google.gson.Gson().toJson(shopSession.save()));
+    }
 
     private void ensureCharacterLoadout(CharacterData character){
         if(character==null||character.getId().equals(skillCharacterId))return;
@@ -180,7 +199,7 @@ public final class MainActivity extends AppCompatActivity {
         debugPanel.setVisibility(View.VISIBLE);Button attack=root.findViewById(R.id.btn_attack_skill);Button defense=root.findViewById(R.id.btn_defense_skill);styleSkillSelectionButton(attack,"공격: "+slots[0].getName(),skillIcon(slots[0]));styleSkillSelectionButton(defense,"방어: "+slots[1].getName(),skillIcon(slots[1]));attack.setOnClickListener(v->showCharacterSkillPicker(0,0,3,"공격 스킬 선택"));defense.setOnClickListener(v->showCharacterSkillPicker(1,3,6,"방어 스킬 선택"));GridLayout learnedGrid=root.findViewById(R.id.learned_skill_grid);
         if(BetaFeatures.SKILL_SELECTION){guide.setText(CharacterSelectionRules.hasCompleteDebugSkillSet(slots)?"캐릭터를 다시 눌러 룬 선택":"일반 스킬 3칸 · 우측 하단 궁극기 1칸");runePanel.setVisibility(View.GONE);learnedGrid.setVisibility(View.VISIBLE);for(int i=2;i<6;i++){final int slot=i;SkillData selected=slots[i];String prefix=i==5?"궁극기: ":"스킬 "+(i-1)+": ";View skill=learnedSkillSelectionView(prefix+(selected==null?"비어 있음":selected.getName()),selected==null?R.drawable.ic_skill_empty:skillIcon(selected));int gridIndex=i-2;GridLayout.LayoutParams lp=new GridLayout.LayoutParams();lp.width=0;lp.height=dp(52);lp.rowSpec=GridLayout.spec(gridIndex/2);lp.columnSpec=GridLayout.spec(gridIndex%2,1f);lp.setGravity(Gravity.FILL_HORIZONTAL|Gravity.TOP);lp.setMargins(dp(2),dp(2),dp(2),dp(2));learnedGrid.addView(skill,lp);skill.setOnClickListener(v->showLearnedSkillPicker(slot));}}
         else{guide.setText("공격 · 방어 스킬과 룬 1 · 룬 2를 선택하세요.");runePanel.setVisibility(View.VISIBLE);learnedGrid.setVisibility(View.GONE);Button rune1=root.findViewById(R.id.btn_rune1);Button rune2=root.findViewById(R.id.btn_rune2);styleRuneSelectionButton(rune1,"룬 1",selectedRune1,selectedRune1Level);styleRuneSelectionButton(rune2,"룬 2",selectedRune2,selectedRune2Level);rune1.setOnClickListener(v->showRunePicker(true));rune2.setOnClickListener(v->showRunePicker(false));}
-        start.setText(playMode==PlayMode.ONLINE_COOP?"대기실로 돌아가기":playMode==PlayMode.SINGLE_PARTY?(partySelection.get(2)==null?"P2 새 캐릭터 만들기":"2캐릭터 싱글 전투 시작"):"1인 전투 시작");start.setOnClickListener(v->{if(playMode==PlayMode.ONLINE_COOP)showOnlineLobby();else if(playMode==PlayMode.SINGLE_PARTY&&partySelection.get(2)==null)switchPartyEditor(2);else startBattle();});setScreen(root);
+        start.setText(playMode==PlayMode.ONLINE_COOP?"대기실로 돌아가기":playMode==PlayMode.SINGLE_PARTY?(partySelection.get(2)==null?"P2 새 캐릭터 만들기":"상점으로"):"상점으로");start.setOnClickListener(v->{if(playMode==PlayMode.ONLINE_COOP)showOnlineLobby();else if(playMode==PlayMode.SINGLE_PARTY&&partySelection.get(2)==null)switchPartyEditor(2);else startBattle();});setScreen(root);
     }
     private String modeSelectionDescription(){if(playMode==PlayMode.SINGLE_PARTY)return "P1/P2 탭에서 캐릭터·스킬·룬을 각각 선택";return playMode.getDescription();}
 
@@ -211,7 +230,7 @@ public final class MainActivity extends AppCompatActivity {
         savePartyEditor();
         screenStage=4;setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         if(!com.pas.game.BuildConfig.PAS_ONLINE_ENABLED){GameModal.notice(this,"협동 준비 중","온라인 접속 설정이 포함된 앱이 필요합니다.");showPlayModeSelection();return;}
-        try{if(onlineFlow==null)onlineFlow=new OnlineCoopFlow(this,this::setScreen,this::showCharacterSelection,this::showPlayModeSelection);onlineFlow.show(partySelection.get(1));}
+        try{if(onlineFlow==null)onlineFlow=new OnlineCoopFlow(this,this::setScreen,this::showCharacterSelection,this::showPlayModeSelection,this::visitOnlineShop);onlineFlow.show(partySelection.get(1));}
         catch(RuntimeException e){GameModal.notice(this,"온라인 연결",e.getMessage());showPlayModeSelection();}
     }
     private ImageButton arrowButton(int icon){ImageButton button=new ImageButton(this);button.setImageResource(icon);button.setBackgroundResource(R.drawable.bg_battle_panel);button.setPadding(dp(14),dp(14),dp(14),dp(14));return button;}
@@ -259,8 +278,34 @@ public final class MainActivity extends AppCompatActivity {
 
     private void startBattle(){
         if(playMode==PlayMode.ONLINE_COOP){showOnlineLobby();return;}
-        savePartyEditor();List<PlayerBattleSetup> players;
-        try{players=partySelection.build(playMode);}catch(IllegalStateException e){GameModal.notice(this,"파티 설정 확인",e.getMessage());return;}
+        savePartyEditor();
+        try{partySelection.build(playMode);}catch(IllegalStateException e){GameModal.notice(this,"파티 설정 확인",e.getMessage());return;}
+        adventurePotions=PotionInventory.empty();
+        shopSession=new com.pas.game.shop.ShopSession(partySelection.build(playMode),chapter,com.pas.game.shop.ShopRules.beta(),adventurePotions);
+        showShop(this::enterPreparedBattle,"전투로 이동");
+    }
+
+    private void showShop(Runnable next,String nextLabel){
+        screenStage=6;
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        setScreen(new com.pas.game.ui.shop.ShopScreen(this,next,nextLabel,playMode==PlayMode.ONLINE_COOP?null:shopSession).view());
+    }
+
+    private void visitOnlineShop(com.pas.game.network.RoomApiClient api,com.pas.game.network.RoomApiClient.Connection connection,Runnable next){
+        screenStage=6;setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        if(remoteShop!=null)remoteShop.dispose();
+        remoteShop=new com.pas.game.ui.shop.RemoteShopScreen(this,api,connection,()->{
+            screenStage=4;
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            next.run();
+        });
+        setScreen(remoteShop.view());
+    }
+
+    private void enterPreparedBattle(){
+        if(playMode==PlayMode.ONLINE_COOP){showOnlineLobby();return;}
+        List<PlayerBattleSetup> players;
+        try{players=shopSession==null?partySelection.build(playMode):shopSession.players();}catch(IllegalStateException e){GameModal.notice(this,"파티 설정 확인",e.getMessage());return;}
         screenStage=5;selectedEnemyId=null;
         engine=BattleFactory.createParty(players,false,random,debug,adventurePotions);
         commandSource=new LocalPlayerController(engine,this::handle);enemyAI=new EncounterEnemyAI(random);outcomeShown=false;clearSelection();engine.start();showBattle();scheduleEnemyIfNeeded();
@@ -431,7 +476,7 @@ public final class MainActivity extends AppCompatActivity {
     private void confirmExit(){GameModal.confirm(this,"게임 종료","정말 게임을 종료하시겠습니까?","종료",this::finishAffinity,"취소",null);}
     private void handleBackNavigation(){confirmExit();}
     @Override public void onWindowFocusChanged(boolean hasFocus){super.onWindowFocusChanged(hasFocus);if(hasFocus)com.pas.game.ui.view.GameWindow.immersive(getWindow());}
-    @Override protected void onStop(){if(onlineFlow!=null)onlineFlow.pause();super.onStop();}
-    @Override protected void onRestart(){super.onRestart();if(playMode==PlayMode.ONLINE_COOP&&screenStage==4)showOnlineLobby();}
-    @Override protected void onDestroy(){if(onlineFlow!=null)onlineFlow.close();handler.removeCallbacksAndMessages(null);super.onDestroy();}
+    @Override protected void onStop(){if(remoteShop!=null)remoteShop.pause();if(onlineFlow!=null)onlineFlow.pause();super.onStop();}
+    @Override protected void onRestart(){super.onRestart();if(playMode==PlayMode.ONLINE_COOP&&screenStage==4)showOnlineLobby();else if(screenStage==6&&remoteShop!=null)remoteShop.resume();}
+    @Override protected void onDestroy(){if(remoteShop!=null)remoteShop.dispose();if(onlineFlow!=null)onlineFlow.close();handler.removeCallbacksAndMessages(null);super.onDestroy();}
 }
