@@ -1,85 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/black">
-
-    <ImageView
-        android:id="@+id/continent_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:importantForAccessibility="no"
-        android:scaleType="centerCrop" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#55000000" />
-
-    <ImageButton
-        android:id="@+id/arrow_left"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_vertical|start"
-        android:layout_marginStart="14dp"
-        android:background="@drawable/bg_battle_panel"
-        android:contentDescription="이전 대륙"
-        android:padding="14dp"
-        android:src="@drawable/ic_arrow_left" />
-
-    <ImageButton
-        android:id="@+id/arrow_right"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="center_vertical|end"
-        android:layout_marginEnd="14dp"
-        android:background="@drawable/bg_battle_panel"
-        android:contentDescription="다음 대륙"
-        android:padding="14dp"
-        android:src="@drawable/ic_arrow_right" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="330dp"
-        android:layout_gravity="bottom"
-        android:layout_margin="18dp"
-        android:background="@drawable/bg_battle_panel"
-        android:orientation="vertical"
-        android:padding="18dp">
-
-        <TextView
-            android:id="@+id/continent_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="28sp" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fillViewport="true">
-
-            <TextView
-                android:id="@+id/description_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:lineSpacingExtra="4dp"
-                android:padding="8dp"
-                android:textColor="#E1E6EA"
-                android:textSize="15sp" />
-        </ScrollView>
-
-        <Button
-            android:id="@+id/btn_next_center"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="@drawable/bg_btn_start"
-            android:text="다음"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="17sp" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:padding="10dp" android:background="#0D151F">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:gravity="center_vertical" android:paddingBottom="6dp">
+        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="@string/continent_title" android:textColor="#F3D99A" android:textSize="20sp" android:textStyle="bold"/>
+        <TextView android:id="@+id/continent_play_mode" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:textColor="#E6D9BC" android:textSize="13sp"/>
     </LinearLayout>
-</FrameLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_weight="1" android:baselineAligned="false">
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="3" android:orientation="vertical"
+            android:background="@drawable/bg_continent_panel" android:foreground="@drawable/fg_continent_corners" android:padding="2dp">
+            <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+            <ImageView android:id="@+id/continent_backdrop" android:layout_width="match_parent"
+                android:layout_height="match_parent" android:scaleType="centerCrop"
+                android:importantForAccessibility="no"/>
+            <View android:layout_width="match_parent" android:layout_height="match_parent"
+                android:background="#66091320" android:importantForAccessibility="no"/>
+            <ImageView android:id="@+id/continent_image" android:layout_width="match_parent"
+                android:layout_height="match_parent" android:scaleType="fitCenter"
+                android:importantForAccessibility="no"/>
+            <ImageButton android:id="@+id/arrow_left" android:layout_width="48dp" android:layout_height="48dp"
+                android:layout_gravity="center_vertical|start" android:layout_marginStart="8dp"
+                android:background="@drawable/bg_continent_button" android:backgroundTint="@null"
+                android:contentDescription="@string/continent_previous" android:padding="13dp"
+                app:tint="#F3D99A" android:src="@drawable/ic_arrow_left"/>
+            <ImageButton android:id="@+id/arrow_right" android:layout_width="48dp" android:layout_height="48dp"
+                android:layout_gravity="center_vertical|end" android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_continent_button" android:backgroundTint="@null"
+                android:contentDescription="@string/continent_next" android:padding="13dp"
+                app:tint="#F3D99A" android:src="@drawable/ic_arrow_right"/>
+            </FrameLayout>
+            <TextView android:id="@+id/continent_image_name" android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#D9111C28" android:padding="5dp" android:gravity="center"
+                android:textColor="#F3D99A" android:textSize="15sp" android:textStyle="bold"
+                android:importantForAccessibility="no"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="2"
+            android:layout_marginStart="8dp" android:background="@drawable/bg_continent_panel"
+            android:orientation="vertical" android:padding="14dp" android:foreground="@drawable/fg_continent_corners">
+            <ScrollView android:id="@+id/continent_description_scroll" android:layout_width="match_parent"
+                android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true"
+                android:clipToPadding="false" android:scrollbarStyle="insideInset">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="vertical" android:paddingEnd="6dp">
+                    <TextView android:id="@+id/continent_name" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:layout_marginTop="3dp"
+                        android:textColor="#F3D99A" android:textSize="20sp" android:textStyle="bold"/>
+                    <View android:layout_width="match_parent" android:layout_height="1dp"
+                        android:layout_marginTop="6dp" android:layout_marginBottom="6dp" android:background="#9A7948"/>
+                    <TextView android:id="@+id/description_text" android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:layout_marginTop="5dp"
+                        android:lineSpacingExtra="2dp" android:textColor="#D0D6DC" android:textSize="13sp"/>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" android:padding="5dp" android:gravity="center_vertical"
+        android:background="@drawable/bg_continent_panel" android:foreground="@drawable/fg_continent_corners">
+        <androidx.appcompat.widget.AppCompatButton android:id="@+id/btn_continent_back"
+            android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1"
+            android:background="@drawable/bg_continent_button" android:backgroundTint="@null"
+            android:text="@string/continent_back" android:textColor="#F4E9D0" android:textSize="15sp"
+            android:textAllCaps="false" android:minWidth="0dp" android:minHeight="0dp"/>
+        <TextView android:id="@+id/continent_next_hint" android:layout_width="0dp"
+            android:layout_height="wrap_content" android:layout_weight="1.4" android:paddingHorizontal="6dp"
+            android:gravity="center" android:textColor="#AAB6C2" android:textSize="12sp"/>
+        <androidx.appcompat.widget.AppCompatButton android:id="@+id/btn_next_center"
+            android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1"
+            android:background="@drawable/bg_continent_primary" android:backgroundTint="@null"
+            android:text="@string/continent_continue" android:textColor="#201A10" android:textSize="15sp"
+            android:textStyle="bold" android:textAllCaps="false" android:minWidth="0dp" android:minHeight="0dp"/>
+    </LinearLayout>
+</LinearLayout>

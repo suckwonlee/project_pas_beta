@@ -16,5 +16,5 @@ public final class EnemySkillRepository {
     public static SkillData bloodHymn(){return SkillData.builder("altar_blood_hymn","핏빛 찬가",SkillGrade.UNCOMMON).cooldown(5).target(TargetType.SELF).describe("자신과 모든 소환 악마의 공격력 +5, 2턴. 해제 가능.").effect((engine,caster,target,value)->RedAltarEncounter.hymn(engine,(EnemyUnit)caster)).build();}
     public static SkillData claw(){return SkillData.builder("demon_claw","할퀴기",SkillGrade.NORMAL).value(100,0).range(0).target(TargetType.ENEMY).effect(attackDamage()).build();}
     public static SkillData hellfireFangs(){return SkillData.builder("demon_hellfire_fangs","지옥불 이빨",SkillGrade.UNCOMMON).value(70,0).range(0).cooldown(3).target(TargetType.ENEMY).effect(attackDamage()).build();}
-    public static SkillData find(String id){for(SkillData data:new SkillData[]{basicAttack(),slam(),unholyFlame(),summon(),bloodHymn(),claw(),hellfireFangs()})if(data.getId().equals(id))return data;return null;}
+    public static SkillData find(String id){for(SkillData data:new SkillData[]{basicAttack(),slam(),unholyFlame(),summon(),bloodHymn(),claw(),hellfireFangs()})if(data.getId().equals(id))return data;return ChapterOneEnemySkills.find(id);}
 }

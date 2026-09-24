@@ -24,6 +24,7 @@ public final class WebSocketBattleTransport implements MultiplayerTransport, Clo
     public interface StateListener { void changed(State state, String message); }
     private final ServerEndpoint endpoint;
     private final RoomApiClient.Connection connection;
+    private final String matchId;
     private final OkHttpClient http;
     private final Executor callbacks;
     private final StateListener stateListener;
@@ -39,7 +40,13 @@ public final class WebSocketBattleTransport implements MultiplayerTransport, Clo
 
     public WebSocketBattleTransport(ServerEndpoint endpoint, RoomApiClient.Connection connection,
             OkHttpClient http, Executor callbacks, StateListener stateListener) {
+        this(endpoint,connection,http,callbacks,stateListener,connection.roomCode);
+    }
+    public WebSocketBattleTransport(ServerEndpoint endpoint,RoomApiClient.Connection connection,
+            OkHttpClient http,Executor callbacks,StateListener stateListener,String matchId){
         connection.validate();
+        if(matchId==null||matchId.isEmpty())throw new IllegalArgumentException("전투 식별자가 없습니다.");
+        this.matchId=matchId;
         this.endpoint = endpoint; this.connection = connection; this.callbacks = callbacks;
         this.stateListener = stateListener;
         this.http = http.newBuilder().followRedirects(false).followSslRedirects(false)
@@ -112,7 +119,7 @@ public final class WebSocketBattleTransport implements MultiplayerTransport, Clo
             }
             try {
                 CommandEnvelope envelope = CommandEnvelope.fromJson(json);
-                if (!connection.roomCode.equals(envelope.getMatchId()) || !connection.clientId.equals(envelope.getClientId())) {
+                if (!matchId.equals(envelope.getMatchId()) || !connection.clientId.equals(envelope.getClientId())) {
                     throw new IllegalArgumentException("다른 방의 명령입니다.");
                 }
                 pendingId = envelope.getRequestId(); pending = callback;
@@ -123,7 +130,7 @@ public final class WebSocketBattleTransport implements MultiplayerTransport, Clo
     }
     @Override public void requestSnapshot(String matchId, String clientId, Callback callback) {
         enqueue(() -> {
-            if (!connection.roomCode.equals(matchId) || !connection.clientId.equals(clientId)) {
+            if (!this.matchId.equals(matchId) || !connection.clientId.equals(clientId)) {
                 deliver(() -> callback.onFailure(new IOException("접속한 방과 다릅니다."))); return;
             }
             if (syncCallback != null) { deliver(() -> callback.onFailure(new IOException("이미 동기화 중입니다."))); return; }

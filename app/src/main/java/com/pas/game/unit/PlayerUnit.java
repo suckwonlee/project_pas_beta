@@ -7,6 +7,10 @@ public final class PlayerUnit extends BattleUnit {
     private final int playerSlot;
     private final RuneLoadout runeLoadout;
     private final int markerResource;
+    private String characterId,skinId="default";
+    public void setAppearance(String characterId,String skinId){this.characterId=characterId;this.skinId=com.pas.game.cosmetic.SkinCatalog.require(characterId,skinId);}
+    public String getCharacterId(){return characterId;}
+    public String getSkinId(){return skinId;}
     public PlayerUnit(String unitId,String name,int tile,int playerSlot){this(unitId,name,tile,playerSlot,RuneLoadout.none());}
     public PlayerUnit(String unitId,String name,int tile,int playerSlot,RuneLoadout runes){this(unitId,name,tile,playerSlot,runes,RuneStats.from(runes));}
     public PlayerUnit(String unitId,String name,int tile,int playerSlot,RuneLoadout runes,int maxHp,int attack,int defense,double criticalRate,double evasionRate,int markerResource){this(unitId,name,tile,playerSlot,runes,RuneStats.from(runes,maxHp,attack,defense,criticalRate,evasionRate),markerResource);}

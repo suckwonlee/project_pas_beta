@@ -38,12 +38,12 @@ public final class RoomApiClient implements Closeable {
         public String roomCode, activeUnitId;
         public Mode mode;
         public List<Participant> participants;
-        public boolean started;
+        public boolean started,chapterSupported,chapterEnabled;
         public long revision;
     }
     public static final class CharacterLoadout {
         public int playerSlot;
-        public String characterId, primaryRuneId, secondaryRuneId;
+        public String characterId, skinId, primaryRuneId, secondaryRuneId;
         public List<String> skillIds;
         public List<Integer> upgrades;
         public Integer primaryRuneLevel, secondaryRuneLevel;
@@ -123,6 +123,23 @@ public final class RoomApiClient implements Closeable {
             throw new IllegalArgumentException("2인 협동의 본인 캐릭터 설정만 보낼 수 있습니다.");
         configure(c, java.util.Collections.singletonList(OnlineLoadoutMapper.from(selected, c.playerSlots.get(0))), result);
     }
+    public void configureChapterSelectedCharacter(Connection c,com.pas.game.multiplayer.PlayerBattleSetup selected,Result<RoomStatus> result){
+        c.validate();
+        if(c.mode!=Mode.COOP||c.playerSlots.size()!=1)throw new IllegalArgumentException("협동 캐릭터 슬롯을 확인하세요.");
+        com.google.gson.JsonObject body=new com.google.gson.JsonObject();
+        body.add("characters",gson.toJsonTree(java.util.Collections.singletonList(OnlineLoadoutMapper.from(selected,c.playerSlots.get(0)))));
+        body.addProperty("chapterOne",true);
+        request(endpoint.rooms(c.roomCode,"players",c.clientId,"loadout"),"PUT",body,c,false,RoomStatus.class,result);
+    }
+    public void chapter(Connection c,Result<ChapterProtocol.Snapshot> result){
+        request(endpoint.rooms(c.roomCode,"chapter"),"GET",null,c,false,ChapterProtocol.Snapshot.class,result);
+    }
+    public void chapterAction(Connection c,String id,long revision,String action,String ticket,Integer slot,String option,Result<ChapterProtocol.Snapshot> result){
+        com.google.gson.JsonObject body=new com.google.gson.JsonObject();
+        body.addProperty("requestId",id);body.addProperty("expectedRevision",revision);body.addProperty("action",action);
+        if(ticket!=null)body.addProperty("ticketId",ticket);if(slot!=null)body.addProperty("targetSlot",slot);if(option!=null)body.addProperty("option",option);
+        request(endpoint.rooms(c.roomCode,"chapter"),"POST",body,c,false,ChapterProtocol.Snapshot.class,result);
+    }
     public void ready(Connection c, Result<RoomStatus> result) {
         request(endpoint.rooms(c.roomCode, "players", c.clientId, "ready"), "POST", null, c, false, RoomStatus.class, result);
     }
@@ -131,6 +148,16 @@ public final class RoomApiClient implements Closeable {
     }
 
     /** Server support is required. No optimistic wallet/stat changes or local fallback. */
+    public void event(Connection c,Result<com.pas.game.event.NonCombatSession.Save> result){
+        c.validate();request(endpoint.rooms(c.roomCode,"event"),"GET",null,c,false,com.pas.game.event.NonCombatSession.Save.class,result);
+    }
+    public void eventAction(Connection c,String id,long revision,String action,String choice,Integer slot,Integer discard,Result<com.pas.game.event.NonCombatSession.Save> result){
+        c.validate();if(id==null||!id.matches("[A-Za-z0-9_-]{8,100}")||revision<0)throw new IllegalArgumentException("이벤트 요청을 확인하세요.");
+        com.google.gson.JsonObject body=new com.google.gson.JsonObject();
+        body.addProperty("requestId",id);body.addProperty("expectedRevision",revision);body.addProperty("action",action);
+        if(choice!=null)body.addProperty("choiceId",choice);if(slot!=null)body.addProperty("targetSlot",slot);if(discard!=null)body.addProperty("discardIndex",discard);
+        request(endpoint.rooms(c.roomCode,"event"),"POST",body,c,false,com.pas.game.event.NonCombatSession.Save.class,result);
+    }
     public void shop(Connection c,Result<ShopProtocol.Snapshot> result){
         c.validate();request(endpoint.rooms(c.roomCode,"shop"),"GET",null,c,false,ShopProtocol.Snapshot.class,result);
     }

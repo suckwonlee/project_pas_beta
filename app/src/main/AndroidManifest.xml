@@ -17,6 +17,9 @@
         <activity android:name=".ui.activity.OnlineTestActivity"
             android:exported="false" android:screenOrientation="unspecified"
             android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity android:name=".ui.event.NonCombatActivity"
+            android:exported="false" android:screenOrientation="unspecified"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
             android:name=".ui.activity.MainActivity"
             android:screenOrientation="unspecified"

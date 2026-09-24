@@ -18,6 +18,7 @@ public final class SkillRuntime {
     public void consume(){if(remainingUses>0)remainingUses--; cooldownRemaining=data.getCooldown();}
     public void onOwnerTurnStart(){if(cooldownRemaining>0)cooldownRemaining--;}
     public void restoreUses(int amount){if(remainingUses>=0)remainingUses=Math.min(data.usesAt(upgradeSteps),remainingUses+amount);}
+    public void restoreRunUses(int saved){int max=getMaxUses();if(max<0){remainingUses=-1;return;}if(saved<0)throw new IllegalArgumentException("잘못된 스킬 횟수입니다.");remainingUses=Math.min(max,saved);}
     public void restoreAllUses(){remainingUses=data.usesAt(upgradeSteps);}
     public void resetCooldown(){cooldownRemaining=0;}
     public void reduceCooldown(int amount){cooldownRemaining=Math.max(0,cooldownRemaining-Math.max(0,amount));}

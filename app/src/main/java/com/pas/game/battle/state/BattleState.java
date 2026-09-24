@@ -36,6 +36,7 @@ public final class BattleState {
     @Deprecated public void setMultiplayer(boolean value){setNetworkCoop(value);}
     private final java.util.Map<Integer,PotionInventory> playerPotions=new java.util.HashMap<>();
     public void setPlayerPotionInventory(int slot,PotionInventory inventory){playerPotions.put(slot,inventory);}
+    public PotionInventory getPotionInventory(int slot){PotionInventory bag=playerPotions.get(slot);return bag==null?potionInventory:bag;}
     public PotionInventory getPotionInventory(){
         BattleUnit active=find(turn.getActiveUnitId());
         if(active instanceof com.pas.game.unit.PlayerUnit){PotionInventory owned=playerPotions.get(((com.pas.game.unit.PlayerUnit)active).getPlayerSlot());if(owned!=null)return owned;}

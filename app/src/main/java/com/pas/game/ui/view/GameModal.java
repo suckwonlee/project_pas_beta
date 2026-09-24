@@ -34,9 +34,27 @@ public final class GameModal {
         return list(activity,title,labels,icons,78,14,action,cancelled);
     }
     private static Dialog list(Activity activity,String title,String[] labels,int[] icons,int rowHeight,int textSize,ItemAction action,Runnable cancelled){
-        Dialog dialog=create(activity,title);LinearLayout panel=dialog.findViewById(R.id.game_modal_panel);ScrollView scroll=new ScrollView(activity);LinearLayout choices=new LinearLayout(activity);choices.setOrientation(LinearLayout.VERTICAL);scroll.addView(choices);int visible=Math.min(labels.length,7);panel.addView(scroll,new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,dp(activity,Math.max(72,visible*(rowHeight+6)))));
+        Dialog dialog=create(activity,title);
+        LinearLayout panel=dialog.findViewById(R.id.game_modal_panel);
+        ScrollView scroll=new ScrollView(activity);
+        scroll.setFillViewport(true);
+        LinearLayout choices=new LinearLayout(activity);
+        choices.setOrientation(LinearLayout.VERTICAL);
+        scroll.addView(choices,new ScrollView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+        // Only the list receives the remaining height; title and close stay visible.
+        panel.addView(scroll,new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,0,1));
         for(int i=0;i<labels.length;i++){final int index=i;Button row=button(activity,labels[i]);row.setTextSize(textSize);row.setGravity(Gravity.START|Gravity.CENTER_VERTICAL);row.setMaxLines(3);if(icons!=null&&i<icons.length&&icons[i]!=0){Drawable icon=activity.getDrawable(icons[i]);if(icon!=null){icon.setBounds(0,0,dp(activity,34),dp(activity,34));row.setCompoundDrawables(icon,null,null,null);row.setCompoundDrawablePadding(dp(activity,10));}}row.setOnClickListener(v->{dialog.dismiss();action.select(index);});LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,dp(activity,rowHeight));lp.setMargins(0,dp(activity,3),0,dp(activity,3));choices.addView(row,lp);}
-        Button close=button(activity,"닫기");close.setOnClickListener(v->{dialog.dismiss();if(cancelled!=null)cancelled.run();});LinearLayout.LayoutParams closeLp=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,dp(activity,48));closeLp.setMargins(0,dp(activity,10),0,0);panel.addView(close,closeLp);dialog.setOnCancelListener(d->{if(cancelled!=null)cancelled.run();});show(activity,dialog);return dialog;
+        Button close=button(activity,"닫기");close.setOnClickListener(v->{dialog.dismiss();if(cancelled!=null)cancelled.run();});LinearLayout.LayoutParams closeLp=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,dp(activity,48));closeLp.setMargins(0,dp(activity,10),0,0);panel.addView(close,closeLp);dialog.setOnCancelListener(d->{if(cancelled!=null)cancelled.run();});show(activity,dialog);
+        Window window=dialog.getWindow();
+        if(window!=null){
+            int screenHeight=activity.getWindow().getDecorView().getHeight();
+            if(screenHeight<=0)screenHeight=activity.getResources().getDisplayMetrics().heightPixels;
+            int listHeight=dp(activity,Math.max(72,Math.min(labels.length,7)*(rowHeight+6)));
+            // Padding 30 + heading 48 + divider 1 + close/margin 58 dp.
+            int desiredHeight=listHeight+dp(activity,137);
+            window.setLayout(modalWidth(activity),Math.min(desiredHeight,(int)(screenHeight*.82f)));
+        }
+        return dialog;
     }
     public static Dialog input(Activity activity,String title,String hint,int inputType,TextAction action){
         Dialog dialog=create(activity,title);LinearLayout panel=dialog.findViewById(R.id.game_modal_panel);EditText input=new EditText(activity);input.setHint(hint);input.setHintTextColor(Color.rgb(145,160,174));input.setTextColor(Color.WHITE);input.setTextSize(16);input.setSingleLine(true);input.setInputType(inputType);input.setBackgroundResource(R.drawable.bg_intent_panel);input.setPadding(dp(activity,14),0,dp(activity,14),0);LinearLayout.LayoutParams inputLp=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,dp(activity,54));inputLp.setMargins(0,dp(activity,14),0,dp(activity,12));panel.addView(input,inputLp);addActions(activity,dialog,panel,"적용",()->action.apply(input.getText().toString()),"취소",null);show(activity,dialog);Window window=dialog.getWindow();if(window!=null){window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);input.requestFocus();}return dialog;

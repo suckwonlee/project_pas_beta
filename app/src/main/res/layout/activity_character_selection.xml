@@ -1,174 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#0C1015"
-    android:fillViewport="true">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="14dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="캐릭터 선택"
-            android:textColor="@android:color/white"
-            android:textSize="26sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_intent_panel"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <TextView
-                android:id="@+id/selected_play_mode"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxLines="2"
-                android:textColor="#FFD98B"
-                android:textSize="13sp" />
-
-            <Button
-                android:id="@+id/btn_change_play_mode"
-                android:layout_width="108dp"
-                android:layout_height="44dp"
-                android:background="@drawable/bg_enemy_tab"
-                android:text="방식 변경"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/party_selection_controls"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-
-            <LinearLayout android:id="@+id/party_slot_tabs" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:orientation="horizontal">
-                <Button android:id="@+id/btn_party_p1" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:layout_marginEnd="4dp" android:text="P1 설정" android:maxLines="2" android:textSize="13sp" android:textColor="@android:color/white" android:background="@drawable/bg_enemy_tab" />
-                <Button android:id="@+id/btn_party_p2" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="P2 설정" android:maxLines="2" android:textSize="13sp" android:textColor="@android:color/white" android:background="@drawable/bg_enemy_tab" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <GridLayout
-            android:id="@+id/character_grid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:columnCount="4" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_battle_panel"
-            android:orientation="vertical"
-            android:padding="14dp">
-
-            <TextView
-                android:id="@+id/character_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="용사후보"
-                android:textColor="@android:color/white"
-                android:textSize="22sp" />
-
-            <TextView
-                android:id="@+id/selection_guide"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="#CBD8E0"
-                android:textSize="14sp" />
-
-            <LinearLayout
-                android:id="@+id/rune_selection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/btn_rune1"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_marginEnd="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_btn_start"
-                    android:textColor="@android:color/white" />
-
-                <Button
-                    android:id="@+id/btn_rune2"
-                    android:layout_width="0dp"
-                    android:layout_height="64dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_btn_start"
-                    android:textColor="@android:color/white" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/debug_skill_selection"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <Button android:id="@+id/btn_attack_skill" android:layout_width="match_parent" android:layout_height="52dp" android:background="@drawable/bg_btn_start" android:textColor="@android:color/white" />
-                <Button android:id="@+id/btn_defense_skill" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="5dp" android:background="@drawable/bg_btn_start" android:textColor="@android:color/white" />
-                <GridLayout android:id="@+id/learned_skill_grid" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:columnCount="2" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/character_flavor_panel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/bg_intent_panel"
-                android:orientation="vertical"
-                android:padding="12dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="캐릭터 플레이버"
-                    android:textColor="#FFD98B"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/character_flavor_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:lineSpacingExtra="3dp"
-                    android:textColor="#D9E1E6"
-                    android:textSize="13sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_action"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/bg_btn_start"
-            android:text="시작"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="17sp" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="10dp" android:background="#0D151F">
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:paddingBottom="6dp">
+  <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="캐릭터 선택" android:textSize="20sp" android:textStyle="bold" android:textColor="#F3D99A"/>
+  <TextView android:id="@+id/selected_play_mode" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="12sp" android:textColor="#D9D1BD"/>
+ </LinearLayout>
+ <LinearLayout android:id="@+id/party_selection_controls" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:visibility="gone" android:layout_marginBottom="6dp">
+  <androidx.appcompat.widget.AppCompatButton android:id="@+id/btn_party_p1" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:background="@drawable/bg_continent_button" android:backgroundTint="@null" android:text="P1 설정" android:textSize="13sp" android:textColor="#F3D99A" android:textAllCaps="false" android:minWidth="0dp" android:minHeight="0dp" android:layout_marginEnd="6dp" android:maxLines="2"/>
+  <androidx.appcompat.widget.AppCompatButton android:id="@+id/btn_party_p2" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:background="@drawable/bg_continent_button" android:backgroundTint="@null" android:text="P2 설정" android:textSize="13sp" android:textColor="#F3D99A" android:textAllCaps="false" android:minWidth="0dp" android:minHeight="0dp" android:maxLines="2"/>
+ </LinearLayout>
+ <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:baselineAligned="false">
+  <FrameLayout android:id="@+id/character_roster_frame" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="27" android:background="@drawable/bg_continent_panel" android:foreground="@drawable/fg_continent_corners">
+  <ScrollView android:id="@+id/character_roster_scroll" android:layout_width="match_parent" android:layout_height="match_parent" android:padding="7dp" android:fillViewport="false">
+   <GridLayout android:id="@+id/character_grid" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnCount="2" android:alignmentMode="alignMargins" android:useDefaultMargins="false"/>
+  </ScrollView>
+  </FrameLayout>
+  <LinearLayout android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="43" android:layout_marginHorizontal="7dp" android:orientation="vertical" android:padding="10dp" android:background="@drawable/bg_continent_panel" android:foreground="@drawable/fg_continent_corners">
+   <FrameLayout android:layout_width="match_parent" android:layout_height="68dp">
+    <ImageView android:id="@+id/selected_character_portrait" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginHorizontal="72dp" android:scaleType="fitCenter"/>
+    <androidx.appcompat.widget.AppCompatButton android:id="@+id/btn_character_skin" android:layout_width="68dp" android:layout_height="48dp" android:layout_gravity="end|center_vertical" android:background="@drawable/bg_continent_button" android:backgroundTint="@null" android:text="스킨" android:textSize="12sp" android:textColor="#F3D99A" android:minWidth="0dp" android:minHeight="0dp"/>
+   </FrameLayout>
+   <TextView android:id="@+id/character_name" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:textSize="17sp" android:textColor="#F3D99A" android:textStyle="bold" android:layout_marginVertical="3dp"/>
+   <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#8B7046" android:layout_marginBottom="6dp"/>
+   <ScrollView android:id="@+id/character_detail_scroll" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:fillViewport="true">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingEnd="6dp">
+     <TextView android:id="@+id/character_flavor_text" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:textSize="13sp" android:textColor="#D0D6DC" android:lineSpacingExtra="2dp"/>
+     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#66553B" android:layout_marginVertical="10dp"/>
+     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="전용 패시브" android:textSize="13sp" android:textStyle="bold" android:textColor="#E6D9BC"/>
+     <TextView android:id="@+id/character_passive_name" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:textSize="15sp" android:textColor="#F3D99A"/>
+     <TextView android:id="@+id/character_passive_description" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textSize="13sp" android:textColor="#D0D6DC" android:lineSpacingExtra="2dp"/>
     </LinearLayout>
-</ScrollView>
+   </ScrollView>
+  </LinearLayout>
+  <FrameLayout android:id="@+id/character_rune_frame" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="30" android:background="@drawable/bg_continent_panel" android:foreground="@drawable/fg_continent_corners">
+  <ScrollView android:id="@+id/character_rune_scroll" android:layout_width="match_parent" android:layout_height="match_parent" android:padding="12dp" android:fillViewport="true">
+   <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="룬 선택" android:textSize="17sp" android:textStyle="bold" android:textColor="#F3D99A" android:layout_marginBottom="10dp"/>
+    <LinearLayout android:id="@+id/rune_selection" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+     <androidx.appcompat.widget.AppCompatButton android:id="@+id/btn_rune1" android:layout_width="match_parent" android:layout_height="82dp" android:background="@drawable/bg_continent_button" android:backgroundTint="@null" android:textColor="#F4E9D0"/>
+     <androidx.appcompat.widget.AppCompatButton android:id="@+id/btn_rune2" android:layout_width="match_parent" android:layout_height="82dp" android:layout_marginTop="8dp" android:background="@drawable/bg_continent_button" android:backgroundTint="@null" android:textColor="#F4E9D0"/>
+    </LinearLayout>
+    <TextView android:id="@+id/selection_guide" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textSize="12sp" android:textColor="#C3BDAE" android:visibility="gone"/>
+   </LinearLayout>
+  </ScrollView>
+  </FrameLayout>
+ </LinearLayout>
+ <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="7dp" android:padding="5dp" android:gravity="center_vertical" android:background="@drawable/bg_continent_panel" android:foreground="@drawable/fg_continent_corners">
+  <androidx.appcompat.widget.AppCompatButton android:id="@+id/btn_character_back" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:background="@drawable/bg_continent_button" android:backgroundTint="@null" android:text="이전" android:textSize="13sp" android:textColor="#F3D99A" android:textAllCaps="false" android:minWidth="0dp" android:minHeight="0dp" />
+  <androidx.appcompat.widget.AppCompatButton android:id="@+id/btn_change_play_mode" android:layout_width="0dp" android:layout_weight="1" android:layout_height="48dp" android:background="@drawable/bg_continent_button" android:backgroundTint="@null" android:text="방식 변경" android:textSize="13sp" android:textColor="#F3D99A" android:textAllCaps="false" android:minWidth="0dp" android:minHeight="0dp" android:layout_marginHorizontal="6dp"/>
+  <androidx.appcompat.widget.AppCompatButton android:id="@+id/btn_action" android:layout_width="0dp" android:layout_weight="1.5" android:layout_height="48dp" android:background="@drawable/bg_continent_primary" android:backgroundTint="@null" android:text="다음으로" android:textColor="#201A10" android:textSize="14sp" android:textStyle="bold" android:textAllCaps="false" android:minWidth="0dp" android:minHeight="0dp"/>
+ </LinearLayout>
+</LinearLayout>

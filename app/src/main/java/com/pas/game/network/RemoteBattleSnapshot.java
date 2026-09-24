@@ -25,7 +25,7 @@ public final class RemoteBattleSnapshot {
         public boolean blocked;
     }
     public static final class Unit {
-        public String unitId, name, team, intent, enemyKind, summonerId;
+        public String unitId, name, team, intent, enemyKind, summonerId, characterId, skinId;
         public int eligibleRound, turnsStarted, summonSequence;
         public boolean gateOpened;
         public List<com.pas.game.status.StatusSummary.Group> statusGroups;

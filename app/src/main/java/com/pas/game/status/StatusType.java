@@ -1,7 +1,7 @@
 package com.pas.game.status;
 
 public enum StatusType {
-    HUNT_TURN_SKIP(ValueKind.FLAT),
+    HUNT_TURN_SKIP(ValueKind.FLAT), SELF_STUN(ValueKind.FLAT),
     DAZED(ValueKind.DURATION), STIFF(ValueKind.DURATION), BIND(ValueKind.DURATION), UNSTOPPABLE(ValueKind.DURATION),
     POISON(ValueKind.FLAT), FIRE(ValueKind.FLAT), SHARP(ValueKind.PERCENT),
     DAMAGE_REDUCTION(ValueKind.PERCENT), CRIT_RATE_UP(ValueKind.PERCENTAGE_POINT), EVADE_UP(ValueKind.PERCENTAGE_POINT),

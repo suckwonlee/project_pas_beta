@@ -18,6 +18,19 @@ if (!configuredServerUrl.isEmpty()) {
 }
 
 android {
+    // Separate resource roots: keep filenames/R.drawable references and nodpi behavior unchanged.
+    sourceSets {
+        main {
+            res.srcDirs += [
+                'skills/hero', 'skills/hunter', 'skills/cleric', 'skills/wizard',
+                'characters', 'skins/hero', 'skins/hunter', 'skins/cleric', 'skins/wizard',
+                'skins/druid', 'skins/engineer', 'skins/bard', 'skins/exotic',
+                'enemies', 'runes/primary', 'runes/secondary',
+                'items/potions', 'items/elixirs', 'items/upgrades',
+                'backgrounds/continents', 'backgrounds/battle', 'backgrounds/shop', 'placeholders'
+            ].collect { 'src/main/res-art/' + it }
+        }
+    }
     namespace 'com.pas.game'
     compileSdk {
         version = release(37)

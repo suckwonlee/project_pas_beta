@@ -57,7 +57,7 @@ public final class BattleBoardView extends View {
             RectF frame=unitFrame(r,i++,count);boolean player="PLAYER".equals(u.team);
             paint.setStyle(Paint.Style.STROKE);paint.setStrokeWidth(5);paint.setColor(player?Color.rgb(63,155,255):Color.rgb(225,78,78));c.drawRoundRect(frame,9,9,paint);
             Drawable marker=player?playerMarker:getContext().getDrawable(com.pas.game.ui.EnemyPortraits.resource(u.enemyKind));
-            if(player)for(com.pas.game.character.CharacterData character:characters.all())if(u.unitId.contains("_"+character.getId()+"_")){marker=getContext().getDrawable(character.getPortraitResource());break;}
+            if(player)for(com.pas.game.character.CharacterData character:characters.all())if(character.getId().equals(u.characterId)||(u.characterId==null&&u.unitId.contains("_"+character.getId()+"_"))){marker=getContext().getDrawable(character.getMarkerResource(u.skinId));break;}
             if(marker!=null){int inset=Math.max(0,Math.min(4,(int)(frame.width()*.08f)));marker.setAlpha(u.dead?105:255);marker.setBounds((int)frame.left+inset,(int)frame.top+inset,(int)frame.right-inset,(int)frame.bottom-inset);marker.draw(c);marker.setAlpha(255);}
         }
         remoteObjects(c,r,tile,remote.traps,"덫");remoteObjects(c,r,tile,remote.decoys,"미끼");remoteObjects(c,r,tile,remote.sanctuaries,"성역");

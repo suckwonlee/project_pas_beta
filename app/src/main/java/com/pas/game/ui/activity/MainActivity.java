@@ -105,6 +105,7 @@ public final class MainActivity extends AppCompatActivity {
     private final int[] upgrades=new int[6];
     private boolean moveMode,outcomeShown,learnedSkillMode,returnPickerShowing;
     private int selectedSlot,continentIndex,screenStage,selectedCharacterIndex;
+    private int characterRosterScroll;
     private SkillRuntime selectedSkill;
     private String selectedTargetId,selectedEnemyId;
     private Integer selectedTile;
@@ -123,6 +124,8 @@ public final class MainActivity extends AppCompatActivity {
     private int chapter=1;
     private PotionInventory adventurePotions;
     private com.pas.game.shop.ShopSession shopSession;
+    private com.pas.game.chapter.ChapterRun chapterRun;
+    private String chapterBattleCheckpoint;
     private int selectedRune1Level=1,selectedRune2Level=1;
     private PlayMode playMode=PlayMode.SINGLE_ONE;
     private final PartySelection partySelection=new PartySelection();
@@ -136,12 +139,12 @@ public final class MainActivity extends AppCompatActivity {
             "5대 대륙 중 가장 작아 '대륙'이라 부르기엔 부족하고, '섬'이라 하기엔 큰 땅. 해안선을 따라 거대한 산맥이 이어져 있고, 북쪽의 거대한 항구를 중심으로 해상 무역이 번성한다. 허나 이 평화롭지만 진입하기 어려운 환경이 마계의 악마 숭배자들이 몰려드는 것을 막아야 했던 파견군의 작전을 방해했고, 결국 이계 침략의 시초가 되었다.",
             "험한 산악과 긴 겨울이 이어지는 혹한의 땅. 이곳은 다른 대륙과의 교류 없이, 강인한 투사들의 수호 아래 짐승과 괴물들과 투쟁하며 살아온 대륙이다. 그러나 적은 인구수는 치명적인 약점이 되었고, 명계의 침략으로 동대륙의 시체들이 되살아나기 시작하면서 이 대륙의 생명 또한 멸종의 위기에 놓이게 되었다.",
             "문명의 손길이 닿지 않은, 전통과 야만이 공존하는 대륙. 투박하지만 따뜻한 야만전사들과 주술사들이 대대로 지켜온 삶의 방식은, 어느 날부터인가 정체 모를 존재들의 출현으로 균열을 일으켰다. 이해할 수 없는 것들이 일상이 되고, 혼돈계의 시선이 이들을 덮친 순간부터—그들의 육신은 변이를 시작했고, 전통과 평화는 조용히, 그러나 확실히 끝을 향해 나아가고 있다.",
-            "드루이드들이 수호하는 정글로 뒤덮인 대륙. 지나치게 울창한 숲은 지상에서의 삶을 거의 불가능하게 만들었고, 드루이드의 축복 아래 나무 위에서 살아가는 방식이 자연스럽게 정착되었다. 그러나 이계의 침략이 시작되며 퍼져나간 ‘심연’의 기운에 접촉한 이후, 정글은 점차 본모습을 잃어갔다. 초목은 뒤틀리고, 숲의 존재인 드루이드들, 그리고 오랫동안 잠들어 있던 야생신들마저 그 침식에서 벗어나지 못하고 있다는 소문이 들려오고 있다.",
+            "드루이드들이 수호하는 정글로 뒤덮인 대륙. 지나치게 울창한 숲은 지상에서의 삶을 거의 불가능하게 만들었고, 드루이드의 축복 아래 나무 위에서 살아가는 방식이 자연스럽게 정착되었다. 그러나 이계의 침략이 시작되며 퍼져나간 ‘심연’의 기운에 접촉한 이후, 정글은 점차 본모습을 잃어갔다. 초목은 뒤틀리고, 숲의 존재인 드루이드들, 그리고 오랫동안 잠들어 있던 자연신들마저 그 침식에서 벗어나지 못하고 있다는 소문이 들려오고 있다.",
             "강대한 제국이 지배하는 비옥한 중심지. 이계의 침공 당시, 이 땅 역시 침략의 대상이 되었으나 제국은 놀라울 만큼 빠르고 효율적으로 위협을 막아냈다. 그러나 승리 뒤, 제국은 전쟁에서 얻은 지식과 전리품을 바탕으로 이계의 힘을 다시 끌어내기 시작했다. 이제 그들은 다른 대륙을 침략해 그 땅과 생존자들을 거대한 제물로 삼으려 한다. 그리고 그 힘을 발판으로, 자신들이 처단했던 이계 너머로 스스로 발을 들이려 한다."
     };
     private final int[] continentImages={R.drawable.south,R.drawable.east,R.drawable.west,R.drawable.north,R.drawable.central};
 
-@Override protected void onCreate(Bundle savedInstanceState){super.onCreate(savedInstanceState);if(getSupportActionBar()!=null)getSupportActionBar().hide();getOnBackPressedDispatcher().addCallback(this,new OnBackPressedCallback(true){@Override public void handleOnBackPressed(){handleBackNavigation();}});ensureCharacterLoadout(characterRepository.all().get(selectedCharacterIndex));adventurePotions=new PotionInventory(potionRepository.forChapter(chapter),0);if(savedInstanceState!=null&&savedInstanceState.containsKey("pas.shop")){
+@Override protected void onCreate(Bundle savedInstanceState){super.onCreate(savedInstanceState);if(getSupportActionBar()!=null)getSupportActionBar().hide();getOnBackPressedDispatcher().addCallback(this,new OnBackPressedCallback(true){@Override public void handleOnBackPressed(){handleBackNavigation();}});ensureCharacterLoadout(characterRepository.all().get(selectedCharacterIndex));adventurePotions=new PotionInventory(potionRepository.forChapter(chapter),0);if(savedInstanceState!=null&&savedInstanceState.containsKey("pas.chapter")){try{chapterRun=com.pas.game.chapter.ChapterRun.restore(new com.google.gson.Gson().fromJson(savedInstanceState.getString("pas.chapter"),com.pas.game.chapter.ChapterRun.Save.class));playMode=chapterRun.save().run.members.size()>1?PlayMode.SINGLE_PARTY:PlayMode.SINGLE_ONE;if(chapterRun.shopNode()&&savedInstanceState.containsKey("pas.shop")){shopSession=com.pas.game.shop.ShopSession.restore(new com.google.gson.Gson().fromJson(savedInstanceState.getString("pas.shop"),com.pas.game.shop.ShopSession.Save.class));showChapterShop(true);}else showChapterStage();return;}catch(RuntimeException e){chapterRun=null;}}if(savedInstanceState!=null&&savedInstanceState.containsKey("pas.shop")){
             try{
                 shopSession=com.pas.game.shop.ShopSession.restore(new com.google.gson.Gson().fromJson(savedInstanceState.getString("pas.shop"),com.pas.game.shop.ShopSession.Save.class));
                 playMode=shopSession.players().size()==2?PlayMode.SINGLE_PARTY:PlayMode.SINGLE_ONE;
@@ -156,6 +159,7 @@ public final class MainActivity extends AppCompatActivity {
         }showMain();}
     @Override protected void onSaveInstanceState(Bundle out){
         super.onSaveInstanceState(out);
+        if(chapterRun!=null&&(screenStage==3||screenStage==6||screenStage==8||screenStage==9))out.putString("pas.chapter",screenStage==3&&chapterBattleCheckpoint!=null?chapterBattleCheckpoint:new com.google.gson.Gson().toJson(chapterRun.save()));
         if(screenStage==6&&playMode!=PlayMode.ONLINE_COOP&&shopSession!=null)
             out.putString("pas.shop",new com.google.gson.Gson().toJson(shopSession.save()));
     }
@@ -169,6 +173,10 @@ public final class MainActivity extends AppCompatActivity {
 
     private void showMain(){
         screenStage=0;setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);View root=getLayoutInflater().inflate(R.layout.activity_main,null);View.OnClickListener start=v->showPlayModeSelection();root.findViewById(R.id.main).setOnClickListener(start);root.findViewById(R.id.start_content).setOnClickListener(start);root.findViewById(R.id.touch_to_start).setOnClickListener(start);View title=root.findViewById(R.id.project_title);title.setOnClickListener(start);title.setOnLongClickListener(v->{showSettings();return true;});
+        root.findViewById(R.id.btn_skin_shop).setOnClickListener(v->{
+            screenStage=7;setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            setScreen(com.pas.game.ui.shop.SkinShopPreview.create(this,this::showMain));
+        });
         if(BetaFeatures.SERVER_TEST_TOOLS&&com.pas.game.BuildConfig.PAS_ONLINE_ENABLED){
             Button online=button("온라인 협동 베타");
             LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,dp(52));lp.topMargin=dp(24);
@@ -179,7 +187,57 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private void showContinentSelection(){
-        screenStage=1;setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);View root=getLayoutInflater().inflate(R.layout.activity_continent_selection,null);ImageView image=root.findViewById(R.id.continent_image);TextView name=root.findViewById(R.id.continent_name);TextView desc=root.findViewById(R.id.description_text);ImageButton left=root.findViewById(R.id.arrow_left);ImageButton right=root.findViewById(R.id.arrow_right);Button next=root.findViewById(R.id.btn_next_center);image.setImageResource(continentImages[continentIndex]);name.setText(continentNames[continentIndex]);desc.setText(continentDescriptions[continentIndex]);left.setOnClickListener(v->{continentIndex=(continentIndex+continentNames.length-1)%continentNames.length;showContinentSelection();});right.setOnClickListener(v->{continentIndex=(continentIndex+1)%continentNames.length;showContinentSelection();});next.setOnClickListener(v->{if(continentIndex!=0){GameModal.notice(this,"개발 중","해당 대륙은 아직 개발 중입니다.");return;}if(playMode==PlayMode.ONLINE_COOP)showOnlineLobby();else showCharacterSelection();});setScreen(root);
+        screenStage=1;
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        View root=getLayoutInflater().inflate(R.layout.activity_continent_selection,null);
+        ((TextView)root.findViewById(R.id.continent_play_mode)).setText(playMode.getTitle());
+        ((TextView)root.findViewById(R.id.continent_next_hint)).setText(
+                playMode==PlayMode.ONLINE_COOP?R.string.continent_next_lobby:R.string.continent_next_character);
+        bindContinentPreview(root);
+        root.findViewById(R.id.arrow_left).setOnClickListener(v->{
+            continentIndex=(continentIndex+continentNames.length-1)%continentNames.length;
+            bindContinentPreview(root);
+            fadeContinentPreview(root);
+        });
+        root.findViewById(R.id.arrow_right).setOnClickListener(v->{
+            continentIndex=(continentIndex+1)%continentNames.length;
+            bindContinentPreview(root);
+            fadeContinentPreview(root);
+        });
+        root.findViewById(R.id.btn_continent_back).setOnClickListener(v->showPlayModeSelection());
+        root.findViewById(R.id.btn_next_center).setOnClickListener(v->{
+            if(continentIndex!=0){
+                GameModal.notice(this,"개발 중","해당 대륙은 아직 개발 중입니다.");
+                return;
+            }
+            if(playMode==PlayMode.ONLINE_COOP)showOnlineLobby();else showCharacterSelection();
+        });
+        setScreen(root);
+    }
+
+    /** Keep navigation fixed while only the illustration and scrollable lore change. */
+    private void bindContinentPreview(View root){
+        ImageView backdrop=root.findViewById(R.id.continent_backdrop);
+        backdrop.setImageBitmap(com.pas.game.ui.view.ContinentBackdrop.get(this,continentImages[continentIndex]));
+        ((ImageView)root.findViewById(R.id.continent_image)).setImageResource(continentImages[continentIndex]);
+        ((TextView)root.findViewById(R.id.continent_name)).setText(continentNames[continentIndex]);
+        ((TextView)root.findViewById(R.id.continent_image_name)).setText((continentIndex+1)+" / "+continentNames.length);
+        ((TextView)root.findViewById(R.id.description_text)).setText(continentDescriptions[continentIndex]);
+        ScrollView scroll=root.findViewById(R.id.continent_description_scroll);
+        scroll.scrollTo(0,0);
+    }
+
+    private void fadeContinentPreview(View root){
+        // Update selection immediately; cancel previous fades so rapid taps never restore stale data.
+        int[] ids={R.id.continent_backdrop,R.id.continent_image,R.id.continent_name,
+                R.id.continent_image_name,R.id.description_text};
+        for(int id:ids){
+            View content=root.findViewById(id);
+            content.animate().cancel();
+            content.setAlpha(0f);
+            content.animate().alpha(1f).setDuration(180)
+                    .setInterpolator(new android.view.animation.DecelerateInterpolator()).start();
+        }
     }
 
     private void showPlayModeSelection(){
@@ -194,18 +252,81 @@ public final class MainActivity extends AppCompatActivity {
     private void selectPlayMode(PlayMode mode){savePartyEditor();loadPartyEditor(1);playMode=mode==null?PlayMode.SINGLE_ONE:mode;showContinentSelection();}
 
     private void showCharacterSelection(){
-        screenStage=3;setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);View root=getLayoutInflater().inflate(R.layout.activity_character_selection,null);GridLayout characterGrid=root.findViewById(R.id.character_grid);List<CharacterData> characterChoices=characterRepository.all();CharacterData selectedCharacter=characterChoices.get(selectedCharacterIndex);ensureCharacterLoadout(selectedCharacter);savePartyEditor();bindPartyControls(root);for(int i=0;i<characterChoices.size();i++)addCharacterTile(characterGrid,characterChoices.get(i),i);TextView modeText=root.findViewById(R.id.selected_play_mode);modeText.setText(playMode.getTitle()+"\n"+modeSelectionDescription());root.findViewById(R.id.btn_change_play_mode).setOnClickListener(v->showPlayModeSelection());TextView characterName=root.findViewById(R.id.character_name);TextView flavorText=root.findViewById(R.id.character_flavor_text);characterName.setText((playMode==PlayMode.SINGLE_PARTY?"P"+editingPartySlot+" · ":"")+selectedCharacter.getName());flavorText.setText(selectedCharacter.getFlavorText());TextView guide=root.findViewById(R.id.selection_guide);View runePanel=root.findViewById(R.id.rune_selection);View debugPanel=root.findViewById(R.id.debug_skill_selection);Button start=root.findViewById(R.id.btn_action);
-        if(!selectedCharacter.isAvailable()){guide.setText("현재 개발 중인 캐릭터입니다.");runePanel.setVisibility(View.GONE);debugPanel.setVisibility(View.GONE);start.setText("개발 중");start.setOnClickListener(v->toast(developmentMessage(selectedCharacter)));setScreen(root);return;}
-        debugPanel.setVisibility(View.VISIBLE);Button attack=root.findViewById(R.id.btn_attack_skill);Button defense=root.findViewById(R.id.btn_defense_skill);styleSkillSelectionButton(attack,"공격: "+slots[0].getName(),skillIcon(slots[0]));styleSkillSelectionButton(defense,"방어: "+slots[1].getName(),skillIcon(slots[1]));attack.setOnClickListener(v->showCharacterSkillPicker(0,0,3,"공격 스킬 선택"));defense.setOnClickListener(v->showCharacterSkillPicker(1,3,6,"방어 스킬 선택"));GridLayout learnedGrid=root.findViewById(R.id.learned_skill_grid);
-        if(BetaFeatures.SKILL_SELECTION){guide.setText(CharacterSelectionRules.hasCompleteDebugSkillSet(slots)?"캐릭터를 다시 눌러 룬 선택":"일반 스킬 3칸 · 우측 하단 궁극기 1칸");runePanel.setVisibility(View.GONE);learnedGrid.setVisibility(View.VISIBLE);for(int i=2;i<6;i++){final int slot=i;SkillData selected=slots[i];String prefix=i==5?"궁극기: ":"스킬 "+(i-1)+": ";View skill=learnedSkillSelectionView(prefix+(selected==null?"비어 있음":selected.getName()),selected==null?R.drawable.ic_skill_empty:skillIcon(selected));int gridIndex=i-2;GridLayout.LayoutParams lp=new GridLayout.LayoutParams();lp.width=0;lp.height=dp(52);lp.rowSpec=GridLayout.spec(gridIndex/2);lp.columnSpec=GridLayout.spec(gridIndex%2,1f);lp.setGravity(Gravity.FILL_HORIZONTAL|Gravity.TOP);lp.setMargins(dp(2),dp(2),dp(2),dp(2));learnedGrid.addView(skill,lp);skill.setOnClickListener(v->showLearnedSkillPicker(slot));}}
-        else{guide.setText("공격 · 방어 스킬과 룬 1 · 룬 2를 선택하세요.");runePanel.setVisibility(View.VISIBLE);learnedGrid.setVisibility(View.GONE);Button rune1=root.findViewById(R.id.btn_rune1);Button rune2=root.findViewById(R.id.btn_rune2);styleRuneSelectionButton(rune1,"룬 1",selectedRune1,selectedRune1Level);styleRuneSelectionButton(rune2,"룬 2",selectedRune2,selectedRune2Level);rune1.setOnClickListener(v->showRunePicker(true));rune2.setOnClickListener(v->showRunePicker(false));}
-        start.setText(playMode==PlayMode.ONLINE_COOP?"대기실로 돌아가기":playMode==PlayMode.SINGLE_PARTY?(partySelection.get(2)==null?"P2 새 캐릭터 만들기":"상점으로"):"상점으로");start.setOnClickListener(v->{if(playMode==PlayMode.ONLINE_COOP)showOnlineLobby();else if(playMode==PlayMode.SINGLE_PARTY&&partySelection.get(2)==null)switchPartyEditor(2);else startBattle();});setScreen(root);
+        screenStage=3;
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        View root=getLayoutInflater().inflate(R.layout.activity_character_selection,null);
+        GridLayout grid=root.findViewById(R.id.character_grid);
+        List<CharacterData> choices=characterRepository.all();
+        CharacterData selected=appearance(choices.get(selectedCharacterIndex));
+        if(selected.isAvailable()){ensureCharacterLoadout(selected);savePartyEditor();}
+        bindPartyControls(root);
+        for(int i=0;i<choices.size();i++)addCharacterTile(grid,choices.get(i),i);
+        ((TextView)root.findViewById(R.id.selected_play_mode)).setText(playMode.getTitle());
+        root.findViewById(R.id.btn_change_play_mode).setOnClickListener(v->showPlayModeSelection());
+        root.findViewById(R.id.btn_character_back).setOnClickListener(v->{
+            if(playMode==PlayMode.ONLINE_COOP)showOnlineLobby();else showContinentSelection();
+        });
+        ((ImageView)root.findViewById(R.id.selected_character_portrait)).setImageResource(selected.getPortraitResource());
+        root.findViewById(R.id.selected_character_portrait).setContentDescription(com.pas.game.character.skin.SkinRepository.BUILT_IN.resolve(selected,selected.getSkinId()).getName());
+        root.findViewById(R.id.btn_character_skin).setOnClickListener(v->showSkinPicker());
+        ((TextView)root.findViewById(R.id.character_name)).setText(
+                (playMode==PlayMode.SINGLE_PARTY?"P"+editingPartySlot+" · ":"")+selected.getName());
+        ((TextView)root.findViewById(R.id.character_flavor_text)).setText(selected.getFlavorText());
+        PassiveData passive=new com.pas.game.passive.PassiveRepository().find(selected.getStartingPassiveId());
+        ((TextView)root.findViewById(R.id.character_passive_name)).setText(
+                passive==null?"준비 중":passive.getName()+" LV"+selected.getStartingPassiveLevel());
+        ((TextView)root.findViewById(R.id.character_passive_description)).setText(
+                passive==null?"":passive.describeAt(selected.getStartingPassiveLevel()));
+        Button rune1=root.findViewById(R.id.btn_rune1),rune2=root.findViewById(R.id.btn_rune2);
+        styleRuneSelectionButton(rune1,"룬 1",selectedRune1,selectedRune1Level);
+        styleRuneSelectionButton(rune2,"룬 2",selectedRune2,selectedRune2Level);
+        for(Button rune:new Button[]{rune1,rune2}){
+            rune.setBackgroundTintList(null);rune.setBackgroundResource(R.drawable.bg_continent_button);
+            rune.setEnabled(selected.isAvailable());rune.setAlpha(selected.isAvailable()?1f:.4f);
+        }
+        rune1.setOnClickListener(v->showRunePicker(true));
+        rune2.setOnClickListener(v->showRunePicker(false));
+        TextView guide=root.findViewById(R.id.selection_guide);
+        guide.setVisibility(selected.isAvailable()?View.GONE:View.VISIBLE);
+        guide.setText("현재 개발 중인 캐릭터입니다.");
+        Button start=root.findViewById(R.id.btn_action);
+        start.setEnabled(selected.isAvailable());
+        start.setText(!selected.isAvailable()?"개발 중":playMode==PlayMode.ONLINE_COOP?"대기실로 돌아가기":
+                playMode==PlayMode.SINGLE_PARTY&&partySelection.get(2)==null?"P2 새 캐릭터 만들기":"다음으로");
+        start.setOnClickListener(v->{
+            if(playMode==PlayMode.ONLINE_COOP)showOnlineLobby();
+            else if(playMode==PlayMode.SINGLE_PARTY&&partySelection.get(2)==null)switchPartyEditor(2);
+            else startBattle();
+        });
+        setScreen(root);
+        ScrollView roster=root.findViewById(R.id.character_roster_scroll);
+        roster.post(()->roster.scrollTo(0,characterRosterScroll));
     }
-    private String modeSelectionDescription(){if(playMode==PlayMode.SINGLE_PARTY)return "P1/P2 탭에서 캐릭터·스킬·룬을 각각 선택";return playMode.getDescription();}
 
+    private CharacterData appearance(CharacterData character){
+        return character.withSkin(new com.pas.game.character.skin.SkinInventory(this).selected(editingPartySlot,character.getId()));
+    }
+    private void showSkinPicker(){
+        CharacterData character=appearance(characterRepository.all().get(selectedCharacterIndex));
+        java.util.List<com.pas.game.character.skin.CharacterSkin> skins=com.pas.game.character.skin.SkinRepository.BUILT_IN.forCharacter(character);
+        String[] names=new String[skins.size()];int[] icons=new int[skins.size()];
+        for(int i=0;i<skins.size();i++){
+            com.pas.game.character.skin.CharacterSkin skin=skins.get(i);
+            names[i]=skin.getName()+(skin.getId().equals(character.getSkinId())?" · 선택됨":new com.pas.game.character.skin.SkinInventory(this).owned(character.getId(),skin.getId())?"":" · 무료 해금");
+            icons[i]=skin.selectionResource(character.getDefaultPortraitResource());
+        }
+        GameModal.list(this,"스킨 선택",names,icons,index->{
+            com.pas.game.character.skin.SkinInventory inventory=new com.pas.game.character.skin.SkinInventory(this);
+            String skin=skins.get(index).getId();final int slot=editingPartySlot;
+            Runnable equip=()->{inventory.equip(slot,character.getId(),skin);showCharacterSelection();};
+            if(inventory.owned(character.getId(),skin))equip.run();
+            else GameModal.confirm(this,"무료 스킨 해금",skins.get(index).getName()+"을 무료로 해금하고 장착합니다.","해금하고 장착",()->{inventory.unlockFree(character.getId(),skin);equip.run();},"취소",null);
+        },null);
+    }
     private void savePartyEditor(){
+        if(!characterRepository.all().get(selectedCharacterIndex).isAvailable())return;
         List<SkillData> loadout=new ArrayList<>(Arrays.asList(slots));List<Integer> levels=new ArrayList<>();for(int level:upgrades)levels.add(level);
-        partySelection.save(new PlayerBattleSetup(editingPartySlot,characterRepository.all().get(selectedCharacterIndex),loadout,levels,new RuneLoadout(selectedRune1,selectedRune1Level,selectedRune2,selectedRune2Level)));
+        partySelection.save(new PlayerBattleSetup(editingPartySlot,appearance(characterRepository.all().get(selectedCharacterIndex)),loadout,levels,new RuneLoadout(selectedRune1,selectedRune1Level,selectedRune2,selectedRune2Level)));
     }
 
     private void loadPartyEditor(int slot){
@@ -234,7 +355,30 @@ public final class MainActivity extends AppCompatActivity {
         catch(RuntimeException e){GameModal.notice(this,"온라인 연결",e.getMessage());showPlayModeSelection();}
     }
     private ImageButton arrowButton(int icon){ImageButton button=new ImageButton(this);button.setImageResource(icon);button.setBackgroundResource(R.drawable.bg_battle_panel);button.setPadding(dp(14),dp(14),dp(14),dp(14));return button;}
-    private void addCharacterTile(GridLayout grid,CharacterData character,int index){Button button=button(character.getName());styleCharacterSelectionButton(button,character.getName(),character.getPortraitResource());button.setAlpha(index==selectedCharacterIndex?1f:character.isAvailable()?.72f:.42f);button.setScaleX(index==selectedCharacterIndex?1f:.96f);button.setScaleY(index==selectedCharacterIndex?1f:.96f);button.setOnClickListener(v->{if(CharacterSelectionRules.shouldOpenRuneSelection(BetaFeatures.SKILL_SELECTION,character.isAvailable(),selectedCharacterIndex,index,slots)){showDebugRuneSelection();return;}if(BetaFeatures.SKILL_SELECTION&&character.isAvailable()&&selectedCharacterIndex==index){GameModal.notice(this,"룬 선택 잠김","일반 스킬 3개와 궁극기 1개를 먼저 선택하세요.");return;}selectedCharacterIndex=index;showCharacterSelection();if(!character.isAvailable())toast(developmentMessage(character));});GridLayout.LayoutParams lp=new GridLayout.LayoutParams();lp.width=0;lp.height=dp(118);lp.columnSpec=GridLayout.spec(GridLayout.UNDEFINED,1f);lp.setMargins(dp(3),dp(3),dp(3),dp(3));grid.addView(button,lp);}
+    private void addCharacterTile(GridLayout grid,CharacterData character,int index){
+        LinearLayout tile=column();
+        tile.setGravity(Gravity.CENTER);tile.setPadding(dp(4),dp(5),dp(4),dp(4));
+        tile.setBackgroundResource(index==selectedCharacterIndex?R.drawable.bg_enemy_tab_selected:R.drawable.bg_continent_button);
+        tile.setAlpha(character.isAvailable()?1f:.45f);
+        tile.setClickable(true);tile.setFocusable(true);
+        tile.setContentDescription(character.getName()+(character.isAvailable()?"":" · 개발 중"));
+        tile.setTag(character.getId());tile.setSelected(index==selectedCharacterIndex);
+        ImageView portrait=new ImageView(this);portrait.setImageResource(appearance(character).getPortraitResource());
+        portrait.setScaleType(ImageView.ScaleType.FIT_CENTER);portrait.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        tile.addView(portrait,new LinearLayout.LayoutParams(-1,dp(52)));
+        TextView name=new TextView(this);name.setText(character.getName());name.setTextColor(Color.rgb(243,217,154));
+        name.setGravity(Gravity.CENTER);name.setMaxLines(2);
+        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(name,10,13,1,TypedValue.COMPLEX_UNIT_SP);
+        tile.addView(name,new LinearLayout.LayoutParams(-1,dp(30)));
+        tile.setOnClickListener(v->{
+            characterRosterScroll=((ScrollView)grid.getParent()).getScrollY();
+            selectedCharacterIndex=index;showCharacterSelection();
+        });
+        GridLayout.LayoutParams lp=new GridLayout.LayoutParams();
+        lp.width=0;lp.height=dp(96);lp.columnSpec=GridLayout.spec(index%2,1f);
+        lp.rowSpec=GridLayout.spec(index/2);lp.setGravity(Gravity.FILL_HORIZONTAL);
+        lp.setMargins(dp(3),dp(3),dp(3),dp(3));grid.addView(tile,lp);
+    }
     private String developmentMessage(CharacterData character){String name=character.getName();boolean useNeun="마법사".equals(name)||"드루이드".equals(name);return name+(useNeun?"는":"은")+" 아직 개발 중입니다.";}
     private Button selectionButton(String text,int iconId){Button button=button(text);styleSelectionButton(button,text,iconId);return button;}
     private void styleSelectionButton(Button button,String text,int iconId){button.setText(text);button.setAllCaps(false);button.setTextColor(Color.WHITE);button.setBackgroundResource(R.drawable.bg_btn_start);Drawable icon=getDrawable(iconId);if(icon!=null){icon.setBounds(0,0,dp(30),dp(30));button.setCompoundDrawables(icon,null,null,null);button.setCompoundDrawablePadding(dp(7));}}
@@ -243,9 +387,17 @@ public final class MainActivity extends AppCompatActivity {
     private void styleSkillSelectionButton(Button button,String text,int iconId){button.setText(text);button.setAllCaps(false);button.setTextColor(Color.WHITE);button.setBackgroundResource(R.drawable.bg_btn_start);Drawable icon=getDrawable(iconId);if(icon!=null){icon.setBounds(0,0,dp(40),dp(40));button.setCompoundDrawables(icon,null,null,null);button.setCompoundDrawablePadding(dp(9));}}
     private View learnedSkillSelectionView(String text,int iconId){FrameLayout button=new FrameLayout(this);button.setClickable(true);button.setFocusable(true);button.setBackgroundResource(R.drawable.bg_btn_start);ImageView icon=new ImageView(this);icon.setImageResource(iconId);icon.setScaleType(ImageView.ScaleType.FIT_CENTER);FrameLayout.LayoutParams iconLp=new FrameLayout.LayoutParams(dp(36),dp(36),Gravity.START|Gravity.CENTER_VERTICAL);iconLp.setMarginStart(dp(8));button.addView(icon,iconLp);TextView label=new TextView(this);label.setText(text);label.setTextColor(Color.WHITE);label.setGravity(Gravity.CENTER);label.setMaxLines(2);label.setEllipsize(TextUtils.TruncateAt.END);label.setPadding(dp(4),0,dp(5),0);TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(label,8,12,1,TypedValue.COMPLEX_UNIT_SP);FrameLayout.LayoutParams labelLp=new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT);labelLp.setMarginStart(dp(50));button.addView(label,labelLp);return button;}
     private void showRunePicker(boolean passive){
-        List<RuneData> runes=passive?runeRepository.primary():runeRepository.secondary();int level=passive?selectedRune1Level:selectedRune2Level;String[] items=new String[runes.size()];int[] icons=new int[runes.size()];for(int i=0;i<runes.size();i++){RuneData rune=runes.get(i);items[i]=rune.getName()+"    LV."+level;icons[i]=runeIcon(rune);}
-        boolean returnToDebugRunes=BetaFeatures.SKILL_SELECTION&&CharacterSelectionRules.hasCompleteDebugSkillSet(slots);
-        GameModal.list(this,passive?"룬 1 선택":"룬 2 선택",items,icons,index->{if(passive)selectedRune1=runes.get(index);else selectedRune2=runes.get(index);if(returnToDebugRunes)showDebugRuneSelection();else showCharacterSelection();},returnToDebugRunes?this::showDebugRuneSelection:null);
+        List<RuneData> runes=passive?runeRepository.primary():runeRepository.secondary();
+        int level=passive?selectedRune1Level:selectedRune2Level;
+        String[] items=new String[runes.size()];int[] icons=new int[runes.size()];
+        for(int i=0;i<runes.size();i++){RuneData rune=runes.get(i);items[i]=rune.getName()+"    LV."+level;icons[i]=runeIcon(rune);}
+        GameModal.list(this,passive?"룬 1 선택":"룬 2 선택",items,icons,index->{
+            RuneData candidate=runes.get(index);
+            com.pas.game.ui.view.RuneDetailDialog.show(this,candidate,level,runeIcon(candidate),()->{
+                if(passive)selectedRune1=candidate;else selectedRune2=candidate;
+                showCharacterSelection();
+            },()->showRunePicker(passive));
+        },null);
     }
     private void showDebugRuneSelection(){String[] items={"룬 1 · LV."+selectedRune1Level+"\n"+selectedRune1.getName(),"룬 2 · LV."+selectedRune2Level+"\n"+selectedRune2.getName()};int[] icons={runeIcon(selectedRune1),runeIcon(selectedRune2)};GameModal.list(this,"룬 선택",items,icons,index->showRunePicker(index==0),this::showCharacterSelection);}
     private int runeIcon(RuneData rune){String id=rune.getId();if("fire".equals(id))return R.drawable.rune_p_fire;if("frost".equals(id))return R.drawable.rune_p_frost;if("guardian".equals(id))return R.drawable.rune_p_guardian;if("venom".equals(id))return R.drawable.rune_p_venom;if("fighting".equals(id))return R.drawable.rune_p_fighting;if("vampire".equals(id))return R.drawable.rune_p_vempire;if("must_live".equals(id))return R.drawable.rune_p_mustlive;if("charge".equals(id))return R.drawable.rune_p_charge;if("smash".equals(id))return R.drawable.rune_s_smash;if("immovable".equals(id))return R.drawable.rune_s_notmove;if("mountain".equals(id))return R.drawable.rune_s_mountain;if("afterimage".equals(id))return R.drawable.rune_s_spectrum;return R.drawable.rune_s_fleshy;}
@@ -276,13 +428,22 @@ public final class MainActivity extends AppCompatActivity {
 
     private String skillCatalogText(){CharacterData c=characterRepository.all().get(selectedCharacterIndex);StringBuilder b=new StringBuilder(c.getName()+" 전체 스킬\n\n");BattleUnit actor=skillPreviewActor();int i=1;for(SkillData s:repository.all()){b.append(i++).append(". ").append(s.getName()).append(" [").append(s.getStartingGrade().getLabel()).append(s.isUltimate()?" · 궁극기":"").append("]\n").append(SkillDetailFormatter.detail(s,0,actor,null)).append("\n\n");}return b.toString();}
 
+    private void showEnemySpawnPicker(){
+        com.pas.game.unit.EnemyKind[] kinds={com.pas.game.unit.EnemyKind.RED_CULTIST,com.pas.game.unit.EnemyKind.CULT_THROWER,com.pas.game.unit.EnemyKind.FANATIC,com.pas.game.unit.EnemyKind.LESSER_DEMON,com.pas.game.unit.EnemyKind.ARMED_CULTIST,com.pas.game.unit.EnemyKind.RITUALIST};
+        String[] names=new String[kinds.length+1];int[] icons=new int[names.length];
+        names[0]="살아있는 허수아비";icons[0]=R.drawable.enemy_south_1;
+        for(int i=0;i<kinds.length;i++){names[i+1]=com.pas.game.battle.engine.ChapterOneEnemies.create(kinds[i],"preview",12).getName();icons[i+1]=com.pas.game.ui.EnemyPortraits.resource(kinds[i].name());}
+        GameModal.list(this,"추가할 적 선택",names,icons,index->{if(engine==null||engine.getState().getOutcome()!=BattleOutcome.ONGOING)return;if(index==0)engine.addDebugEnemy(12);else engine.addDebugEnemy(kinds[index-1],12);refreshBattle();},null);
+    }
     private void startBattle(){
         if(playMode==PlayMode.ONLINE_COOP){showOnlineLobby();return;}
         savePartyEditor();
         try{partySelection.build(playMode);}catch(IllegalStateException e){GameModal.notice(this,"파티 설정 확인",e.getMessage());return;}
+        chapterRun=null;chapterBattleCheckpoint=null;chapter=1;
         adventurePotions=PotionInventory.empty();
-        shopSession=new com.pas.game.shop.ShopSession(partySelection.build(playMode),chapter,com.pas.game.shop.ShopRules.beta(),adventurePotions);
-        showShop(this::enterPreparedBattle,"전투로 이동");
+        List<PlayerBattleSetup> startingParty=partySelection.build(playMode);
+        shopSession=null;chapterRun=new com.pas.game.chapter.ChapterRun(startingParty,200*startingParty.size(),adventurePotions);
+        showChapterStage();
     }
 
     private void showShop(Runnable next,String nextLabel){
@@ -296,7 +457,7 @@ public final class MainActivity extends AppCompatActivity {
         if(remoteShop!=null)remoteShop.dispose();
         remoteShop=new com.pas.game.ui.shop.RemoteShopScreen(this,api,connection,()->{
             screenStage=4;
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             next.run();
         });
         setScreen(remoteShop.view());
@@ -306,9 +467,109 @@ public final class MainActivity extends AppCompatActivity {
         if(playMode==PlayMode.ONLINE_COOP){showOnlineLobby();return;}
         List<PlayerBattleSetup> players;
         try{players=shopSession==null?partySelection.build(playMode):shopSession.players();}catch(IllegalStateException e){GameModal.notice(this,"파티 설정 확인",e.getMessage());return;}
-        screenStage=5;selectedEnemyId=null;
-        engine=BattleFactory.createParty(players,false,random,debug,adventurePotions);
-        commandSource=new LocalPlayerController(engine,this::handle);enemyAI=new EncounterEnemyAI(random);outcomeShown=false;clearSelection();engine.start();showBattle();scheduleEnemyIfNeeded();
+        chapterRun=new com.pas.game.chapter.ChapterRun(players,shopSession==null?200*players.size():shopSession.gold(),adventurePotions);
+        showChapterStage();
+    }
+
+    private void showChapterStage(){
+        screenStage=8;setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        if(chapterRun==null)return;
+        com.pas.game.chapter.ChapterRun.Save state=chapterRun.save();
+        com.pas.game.chapter.ChapterRewards.migrate(state.run);
+        LinearLayout root=column();root.setPadding(dp(18),dp(10),dp(18),dp(10));root.setBackgroundResource(R.drawable.bg_battle_panel);
+        TextView title=battleLabel(state.failed?"모험 종료":chapterRun.complete()?"남대륙 챕터1 완료":chapterRun.title(),22,Color.rgb(243,217,154));root.addView(title);
+        ScrollView scroll=new ScrollView(this);LinearLayout body=column();scroll.addView(body);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
+        for(com.pas.game.event.EventRunState.Member m:state.run.members)body.addView(battleLabel("P"+m.setup.slot+" "+m.setup.character.getName()+" · HP "+m.hp+"/"+m.maxHp+" · 패시브 "+m.passives.size()+"/5",15,Color.WHITE));
+        body.addView(battleLabel("골드 "+state.run.gold.get(com.pas.game.chapter.ChapterRun.LOCAL_OWNER),15,Color.WHITE));
+        Button bag=button("물약 보관함");bag.setOnClickListener(v->showPotionBag(state.run,com.pas.game.chapter.ChapterRun.LOCAL_OWNER));body.addView(bag);
+        if(!state.failed){
+            for(com.pas.game.chapter.ChapterRewards.Ticket t:new ArrayList<>(state.run.rewards)){
+                Button reward=button("획득 · "+t.label());reward.setOnClickListener(v->showChapterReward(t));body.addView(reward);
+            }
+
+        }
+        Button next=button(state.failed||chapterRun.complete()?"캐릭터 선택으로":chapterRun.shopNode()?"상점으로":chapterRun.eventNode()?"비전투 이벤트로":"다음 전투로");
+        next.setEnabled(state.failed||state.run.rewards.isEmpty());
+        next.setOnClickListener(v->{if(state.failed||chapterRun.complete()){chapterRun=null;showCharacterSelection();}else if(chapterRun.shopNode())showChapterShop(false);else if(chapterRun.eventNode())showChapterEvent();else startChapterBattle();});root.addView(next);
+        setScreen(root);
+    }
+    private void showPotionBag(com.pas.game.event.EventRunState run,String owner){
+        List<String> labels=new ArrayList<>();
+        for(Integer tier:run.potions.get(owner))labels.add(new com.pas.game.item.potion.PotionRepository().forChapter(tier).getName());
+        GameModal.notice(this,"물약 보관함",labels.isEmpty()?"보관 중인 물약이 없습니다.":android.text.TextUtils.join("\n",labels)+"\n최대 3개 · 전투 중 사용");
+    }
+    private void showChapterReward(com.pas.game.chapter.ChapterRewards.Ticket ticket){
+        com.pas.game.event.EventRunState run=chapterRun.save().run;
+        List<String> labels=new ArrayList<>();List<Runnable> actions=new ArrayList<>();
+        for(com.pas.game.event.EventRunState.Member m:run.members){
+            if(ticket.targetSlot>0&&ticket.targetSlot!=m.setup.slot){
+                labels.add("P"+m.setup.slot+" · "+m.setup.character.getName()+"에게 양도");
+                actions.add(()->{try{com.pas.game.chapter.ChapterRewards.transfer(run,ticket,m.setup.slot);showChapterStage();showChapterRewardOptions(ticket,m);}catch(RuntimeException e){GameModal.notice(this,"양도 확인",e.getMessage());}});
+            }else{
+                labels.add("P"+m.setup.slot+" · "+m.setup.character.getName()+" 보상 선택");
+                actions.add(()->showChapterRewardOptions(ticket,m));
+            }
+        }
+        labels.add("선택 안 함 (+40골드)");actions.add(()->declineChapterReward(ticket,ticket.targetSlot>0?ticket.targetSlot:run.members.get(0).setup.slot));
+        if(run.members.size()==1){showChapterRewardOptions(ticket,run.members.get(0));return;}
+        GameModal.list(this,"보상 받을 캐릭터",labels.toArray(new String[0]),null,i->actions.get(i).run(),null);
+    }
+    private void showChapterRewardOptions(com.pas.game.chapter.ChapterRewards.Ticket ticket,com.pas.game.event.EventRunState.Member member){
+        List<com.pas.game.chapter.ChapterRewards.Option> options=com.pas.game.chapter.ChapterRewards.options(member,ticket);
+        List<String> names=new ArrayList<>();for(var option:options)names.add(option.label);
+        names.add("선택 안 함 (+40골드)");
+        if(chapterRun.save().run.members.size()>1)names.add("다른 캐릭터에게 양도");
+        GameModal.list(this,"P"+member.setup.slot+" · 보상 선택 ("+options.size()+"개 중 1개)",names.toArray(new String[0]),null,index->{
+            if(index==options.size()){declineChapterReward(ticket,member.setup.slot);return;}
+            if(index>options.size()){showChapterReward(ticket);return;}
+            String key=options.get(index).key;
+            if("potion".equals(key)&&chapterRun.save().run.potions.get(member.owner).size()>=3){
+                List<String> potions=new ArrayList<>();
+                for(int tier:chapterRun.save().run.potions.get(member.owner))potions.add(new com.pas.game.item.potion.PotionRepository().forChapter(tier).getName()+" 버리고 받기");
+                potions.add("돌아가기");
+                GameModal.list(this,"물약 보관함 · 교체할 물약",potions.toArray(new String[0]),null,i->{if(i<3)claimChapterReward(ticket,member.setup.slot,"potion:replace:"+i);else showChapterRewardOptions(ticket,member);},null);
+            }else claimChapterReward(ticket,member.setup.slot,key);
+        },null);
+    }
+    private void declineChapterReward(com.pas.game.chapter.ChapterRewards.Ticket ticket,int slot){
+        try{String message=com.pas.game.chapter.ChapterRewards.decline(chapterRun.save().run,ticket,slot);showChapterStage();GameModal.notice(this,"보상 포기",message);}
+        catch(RuntimeException e){GameModal.notice(this,"보상 확인",e.getMessage());}
+    }
+    private void claimChapterReward(com.pas.game.chapter.ChapterRewards.Ticket ticket,int slot,String key){
+        try{String message=com.pas.game.chapter.ChapterRewards.apply(chapterRun.save().run,ticket,slot,key,random);showChapterStage();GameModal.notice(this,"보상 적용",message);}
+        catch(RuntimeException e){GameModal.notice(this,"보상 확인",e.getMessage());}
+    }
+
+    private void showChapterShop(boolean restoring){
+        if(!restoring)shopSession=chapterRun.shop();
+        showShop(()->{chapterRun.finishShop(shopSession);shopSession=null;showChapterStage();},"다음으로");
+    }
+    private void showChapterEvent(){
+        com.pas.game.event.NonCombatSession session=chapterRun.event(random);
+        if(session==null){showChapterStage();return;}
+        screenStage=9;
+        final com.pas.game.ui.event.NonCombatScreen[] view=new com.pas.game.ui.event.NonCombatScreen[1];
+        view[0]=new com.pas.game.ui.event.NonCombatScreen(this,com.pas.game.chapter.ChapterRun.LOCAL_OWNER,new com.pas.game.ui.event.NonCombatScreen.Actions(){
+            public void suggest(long rev,String id){perform(()->session.suggest(com.pas.game.chapter.ChapterRun.LOCAL_OWNER,rev,id));}
+            public void choose(long rev,String id,int slot){perform(()->session.propose(com.pas.game.chapter.ChapterRun.LOCAL_OWNER,rev,id,slot));}
+            public void discard(long rev,int index){perform(()->session.discardPotion(com.pas.game.chapter.ChapterRun.LOCAL_OWNER,rev,index));}
+            public void done(){if(session.save().awaitingCombat)startChapterBattle();else if(session.save().resolved){chapterRun.finishEvent();showChapterStage();}}
+            private void perform(Runnable task){try{task.run();view[0].render(session.save());}catch(RuntimeException e){view[0].error(e.getMessage());}}
+        });
+        setScreen(view[0].view());view[0].render(session.save());
+    }
+    private void startChapterBattle(){
+        chapterBattleCheckpoint=new com.google.gson.Gson().toJson(chapterRun.save());
+        engine=chapterRun.battle(random,debug);selectedEnemyId=null;
+        commandSource=new LocalPlayerController(engine,this::handle);enemyAI=new EncounterEnemyAI(random);outcomeShown=false;clearSelection();
+        engine.start();showBattle();scheduleEnemyIfNeeded();
+    }
+    private void showChapterBattleResult(){
+        screenStage=8;
+        LinearLayout root=column();root.setPadding(dp(16),dp(10),dp(16),dp(10));root.setBackgroundResource(R.drawable.bg_battle_panel);
+        root.addView(battleLabel(chapterRun.save().failed?"패배":"승리",22,Color.rgb(243,217,154)));
+        ScrollView scroll=new ScrollView(this);TextView log=battleLabel(TextUtils.join("\n",engine.getState().getLogs()),14,Color.WHITE);scroll.addView(log);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
+        Button next=button("다음으로");next.setOnClickListener(v->showChapterStage());root.addView(next);setScreen(root);
     }
 
     private void showBattle(){
@@ -342,7 +603,7 @@ public final class MainActivity extends AppCompatActivity {
         end.setOnClickListener(v->{BattleUnit a=engine.activeUnit();if(a!=null&&a.getTeam()==Team.PLAYER)submitCommand(new EndTurnCommand(a.getUnitId()));});inspectLog.setOnClickListener(v->showFullLog());debugButton.setOnClickListener(v->showDebugPanel());setScreen(root);refreshBattle();
     }
 
-    private void refreshBattle(){if(engine==null)return;if(board!=null)board.bind(engine.getState());BattleUnit active=engine.activeUnit();BattleUnit player=displayedPlayer();List<BattleUnit> enemies=engine.getState().living(Team.ENEMY);BattleUnit enemy=resolveSelectedEnemy(enemies);turnInfo.setText("ROUND "+engine.getState().getRound()+" · "+(isPlayerTurn()?"나의 턴":"적의 턴"));if(player!=null){if(playerPortrait!=null&&player instanceof PlayerUnit)playerPortrait.setImageResource(((PlayerUnit)player).getMarkerResource());playerName.setText(player.getName());setHp(playerHpBar,playerHpText,player);renderStatuses(playerStatusRow,player);preview.setText(engine.hasPendingWizardReturn()?"차원 표류 복귀 위치 선택":moveMode?"중앙에서 이동 칸 선택":"위치 "+player.getTile()+" · 이동 "+engine.getState().getTurn().getMovesRemaining()+" · 행동 "+engine.getState().getTurn().getSkillsRemaining());}else renderStatuses(playerStatusRow,null);renderEnemySelector(enemies);if(enemy!=null){enemyName.setText(enemy.getName());enemyImage.setImageResource(enemyImageResource(enemy));setHp(enemyHpBar,enemyHpText,enemy);renderStatuses(enemyStatusRow,enemy);enemyIntent.setText(enemyIntentText(enemy,player));}else{enemyName.setText("적 없음");enemyImage.setImageDrawable(null);enemyHpBar.setProgress(0);enemyHpText.setText("HP 0 / 0");renderStatuses(enemyStatusRow,null);enemyIntent.setText("전투가 끝났다.");}if(commandGrid!=null){renderCommandGrid();boolean mine=isPlayerTurn()&&engine.getState().getOutcome()==BattleOutcome.ONGOING;View panel=(View)commandGrid.getParent();panel.setAlpha(mine?1f:.55f);for(int i=0;i<commandGrid.getChildCount();i++)commandGrid.getChildAt(i).setEnabled(mine);if(battleUtilityButton!=null)battleUtilityButton.setEnabled(mine||learnedSkillMode);}if(board!=null)highlightBoard(active);List<String> logs=engine.getState().getLogs();logView.setText(logs.isEmpty()?"":logs.get(logs.size()-1));if(engine.hasPendingWizardReturn())showWizardReturnPicker();if(engine.getState().getOutcome()!=BattleOutcome.ONGOING&&!outcomeShown){outcomeShown=true;GameModal.confirm(this,engine.getState().getOutcome()==BattleOutcome.VICTORY?"승리":"패배","전투 로그에서 상세 결과를 확인할 수 있습니다.","다시 준비",this::showCharacterSelection,"상세 로그",this::showFullLog);}}
+    private void refreshBattle(){if(engine==null)return;if(chapterRun!=null)chapterRun.collectDefeated(engine,random);if(board!=null)board.bind(engine.getState());BattleUnit active=engine.activeUnit();BattleUnit player=displayedPlayer();List<BattleUnit> enemies=engine.getState().living(Team.ENEMY);BattleUnit enemy=resolveSelectedEnemy(enemies);turnInfo.setText("ROUND "+engine.getState().getRound()+" · "+(isPlayerTurn()?"나의 턴":"적의 턴"));if(player!=null){if(playerPortrait!=null&&player instanceof PlayerUnit)playerPortrait.setImageResource(((PlayerUnit)player).getMarkerResource());playerName.setText(player.getName());setHp(playerHpBar,playerHpText,player);renderStatuses(playerStatusRow,player);preview.setText(engine.hasPendingWizardReturn()?"차원 표류 복귀 위치 선택":moveMode?"중앙에서 이동 칸 선택":"위치 "+player.getTile()+" · 이동 "+engine.getState().getTurn().getMovesRemaining()+" · 행동 "+engine.getState().getTurn().getSkillsRemaining());}else renderStatuses(playerStatusRow,null);renderEnemySelector(enemies);if(enemy!=null){enemyName.setText(enemy.getName());enemyImage.setImageResource(enemyImageResource(enemy));setHp(enemyHpBar,enemyHpText,enemy);renderStatuses(enemyStatusRow,enemy);enemyIntent.setText(enemyIntentText(enemy,player));}else{enemyName.setText("적 없음");enemyImage.setImageDrawable(null);enemyHpBar.setProgress(0);enemyHpText.setText("HP 0 / 0");renderStatuses(enemyStatusRow,null);enemyIntent.setText("전투가 끝났다.");}if(commandGrid!=null){renderCommandGrid();boolean mine=isPlayerTurn()&&engine.getState().getOutcome()==BattleOutcome.ONGOING;View panel=(View)commandGrid.getParent();panel.setAlpha(mine?1f:.55f);for(int i=0;i<commandGrid.getChildCount();i++)commandGrid.getChildAt(i).setEnabled(mine);if(battleUtilityButton!=null)battleUtilityButton.setEnabled(mine||learnedSkillMode);}if(board!=null)highlightBoard(active);List<String> logs=engine.getState().getLogs();logView.setText(logs.isEmpty()?"":logs.get(logs.size()-1));if(engine.hasPendingWizardReturn())showWizardReturnPicker();if(engine.getState().getOutcome()!=BattleOutcome.ONGOING&&!outcomeShown){outcomeShown=true;if(chapterRun!=null){chapterRun.finishBattle(engine,random);chapterBattleCheckpoint=null;showChapterBattleResult();return;}GameModal.confirm(this,engine.getState().getOutcome()==BattleOutcome.VICTORY?"승리":"패배","전투 로그에서 상세 결과를 확인할 수 있습니다.","다시 준비",this::showCharacterSelection,"상세 로그",this::showFullLog);}}
     private BattleUnit resolveSelectedEnemy(List<BattleUnit> enemies){if(enemies.isEmpty()){selectedEnemyId=null;return null;}for(BattleUnit enemy:enemies)if(enemy.getUnitId().equals(selectedEnemyId))return enemy;BattleUnit active=engine.activeUnit();BattleUnit fallback=active!=null&&active.getTeam()==Team.ENEMY?active:enemies.get(0);selectedEnemyId=fallback.getUnitId();return fallback;}
     private BattleUnit selectedEnemy(){if(engine==null)return null;return resolveSelectedEnemy(engine.getState().living(Team.ENEMY));}
     private void renderEnemySelector(List<BattleUnit> enemies){if(enemySelectorRow==null)return;enemySelectorRow.removeAllViews();if(enemies.isEmpty()){TextView empty=battleLabel("적 0",9,Color.rgb(132,147,158));empty.setGravity(Gravity.CENTER);enemySelectorRow.addView(empty,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,dp(34)));return;}for(int i=0;i<enemies.size();i++){BattleUnit unit=enemies.get(i);boolean selected=unit.getUnitId().equals(selectedEnemyId);Button tab=compactBattleButton("적 "+(i+1)+" · "+unit.getHp()+"/"+unit.getMaxHp(),8);tab.setSingleLine(true);tab.setTextColor(selected?Color.WHITE:Color.rgb(190,205,218));tab.setBackgroundResource(selected?R.drawable.bg_enemy_tab_selected:R.drawable.bg_enemy_tab);tab.setOnClickListener(v->{selectedEnemyId=unit.getUnitId();refreshBattle();});LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,dp(32));lp.setMargins(dp(2),dp(1),dp(2),dp(1));enemySelectorRow.addView(tab,lp);}}
@@ -435,7 +696,7 @@ public final class MainActivity extends AppCompatActivity {
     private void showWizardReturnPicker(){if(returnPickerShowing||engine==null||!engine.hasPendingWizardReturn())return;returnPickerShowing=true;Dialog dialog=new Dialog(this);LinearLayout box=column();box.setPadding(dp(12),dp(10),dp(12),dp(10));box.setBackgroundResource(R.drawable.bg_battle_panel);TextView title=battleLabel("차원 표류 · 복귀할 칸을 선택하세요",18,Color.WHITE);title.setGravity(Gravity.CENTER);box.addView(title,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,dp(42)));BattleBoardView returnBoard=new BattleBoardView(this);returnBoard.bind(engine.getState());Set<Integer> tiles=new HashSet<>(engine.validWizardReturnTiles());returnBoard.setSelection(tiles,null);box.addView(returnBoard,new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,1));dialog.setContentView(box);dialog.setCancelable(false);returnBoard.setListener(tile->{if(!tiles.contains(tile)){toast("강조된 인접 칸을 선택하세요.");return;}BattleUnit actor=engine.activeUnit();if(actor==null){toast("복귀할 캐릭터를 찾지 못했습니다.");return;}returnPickerShowing=false;dialog.dismiss();submitCommand(new ResolveWizardReturnCommand(actor.getUnitId(),tile));});dialog.show();Window window=dialog.getWindow();if(window!=null){window.setLayout((int)(getResources().getDisplayMetrics().widthPixels*.88f),(int)(getResources().getDisplayMetrics().heightPixels*.84f));WindowManager.LayoutParams attrs=window.getAttributes();attrs.dimAmount=.78f;window.setAttributes(attrs);window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);}}
     private void submitCommand(com.pas.game.battle.command.BattleCommand command){if(commandSource==null){toast("전투 명령 연결이 준비되지 않았습니다.");return;}commandSource.submit(command);}
     private void handle(BattleResult result){if(!result.isSuccess()){toast(result.getEvents().isEmpty()?"명령 실패":result.getEvents().get(0).getMessage());return;}clearSelection();refreshBattle();scheduleEnemyIfNeeded();}
-    private void scheduleEnemyIfNeeded(){if(engine==null||engine.getState().getOutcome()!=BattleOutcome.ONGOING)return;BattleUnit active=engine.activeUnit();if(active!=null&&active.getTeam()==Team.ENEMY)handler.postDelayed(()->{enemyAI.takeTurn(engine);clearSelection();refreshBattle();scheduleEnemyIfNeeded();},420);}
+    private void scheduleEnemyIfNeeded(){if(engine==null||engine.getState().getOutcome()!=BattleOutcome.ONGOING)return;final BattleEngine scheduled=engine;final BattleUnit active=engine.activeUnit();if(active!=null&&active.getTeam()==Team.ENEMY)handler.postDelayed(()->{if(engine!=scheduled||screenStage!=3||scheduled.getState().getOutcome()!=BattleOutcome.ONGOING||scheduled.activeUnit()!=active)return;enemyAI.takeTurn(scheduled);clearSelection();refreshBattle();scheduleEnemyIfNeeded();},420);}
     private boolean isPlayerTurn(){return engine!=null&&engine.activeUnit()!=null&&engine.activeUnit().getTeam()==Team.PLAYER;}
     private void clearSelection(){moveMode=false;learnedSkillMode=false;selectedSkill=null;selectedTargetId=null;selectedTile=null;}
 
@@ -450,7 +711,7 @@ public final class MainActivity extends AppCompatActivity {
         LinearLayout box=column();box.setPadding(dp(16),dp(8),dp(16),dp(8));addDebugButton(box,"플레이어 HP 설정",v->promptNumber("HP",value->{BattleUnit p=displayedPlayer();if(p!=null)engine.setHp(p.getUnitId(),value);refreshBattle();}));addDebugButton(box,"선택한 적 HP 설정",v->promptNumber("HP",value->{BattleUnit e=selectedEnemy();if(e!=null)engine.setHp(e.getUnitId(),value);refreshBattle();}));
         addDebugButton(box,"HP·사용횟수 완전 회복 / 쿨타임 초기화",v->{engine.restoreAll();refreshBattle();});addDebugButton(box,"포션 종류별 획득 ("+engine.getState().getPotionInventory().getCount()+"/"+PotionInventory.MAX_COUNT+")",v->showDebugPotionPicker());addDebugButton(box,"치명타 강제: "+debug.getCritical(),v->{debug.setCritical(next(debug.getCritical()));showDebugPanel();});addDebugButton(box,"회피 강제: "+debug.getEvasion(),v->{debug.setEvasion(next(debug.getEvasion()));showDebugPanel();});addDebugButton(box,"적 AI 스킵: "+debug.isSkipEnemyAi(),v->{debug.setSkipEnemyAi(!debug.isSkipEnemyAi());showDebugPanel();});addDebugButton(box,"플레이어 무적: "+debug.isInvinciblePlayers(),v->{debug.setInvinciblePlayers(!debug.isInvinciblePlayers());showDebugPanel();});addDebugButton(box,"모든 스킬 사용 가능: "+debug.isAllSkillsAvailable(),v->{debug.setAllSkillsAvailable(!debug.isAllSkillsAvailable());showDebugPanel();});
         addDebugButton(box,"부활 수단 ON/OFF: "+(engine.getState().getReviveResourceCount()>0),v->{engine.getState().setReviveResourceCount(engine.getState().getReviveResourceCount()>0?0:1);showDebugPanel();});addDebugButton(box,"유닛 위치 강제 이동",v->promptNumber("칸 번호 1~12",tile->{BattleUnit a=engine.activeUnit();if(a!=null)engine.forceMove(a.getUnitId(),tile);refreshBattle();}));addDebugButton(box,"현재 유닛 멍해짐 추가",v->{BattleUnit a=engine.activeUnit();if(a!=null)engine.applyStatus(a,new StatusEffect("DEBUG_DAZE",StatusType.DAZED,"DEBUG",2,0,false,true));refreshBattle();});addDebugButton(box,"플레이어 화염 +10",v->{BattleUnit p=displayedPlayer();if(p!=null)engine.applyStatus(p,new StatusEffect("DEBUG_FIRE",StatusType.FIRE,"DEBUG",-1,10,true,true));refreshBattle();});addDebugButton(box,"선택한 적 중독 +5",v->{BattleUnit e=selectedEnemy();if(e!=null)engine.applyStatus(e,new StatusEffect("DEBUG_POISON",StatusType.POISON,"DEBUG",-1,5,true,true));refreshBattle();});addDebugButton(box,"선택한 적 멍해짐 2턴",v->{BattleUnit e=selectedEnemy();if(e!=null)engine.applyStatus(e,new StatusEffect("DEBUG_ENEMY_DAZE",StatusType.DAZED,"DEBUG",2,0,false,true));refreshBattle();});addDebugButton(box,"현재 유닛 상태이상 모두 제거",v->{BattleUnit a=engine.activeUnit();if(a!=null)engine.clearStatuses(a.getUnitId());refreshBattle();});
-        addDebugButton(box,"스킬 강제 장착 / 강화",v->promptText("슬롯,스킬번호,강화 (예: 1,20,0)",text->{String[] p=text.split(",");if(p.length==3){int slot=parse(p[0],0)-1,index=parse(p[1],0)-1,grade=parse(p[2],0);BattleUnit a=engine.activeUnit();PlayerBattleSetup setup=a instanceof PlayerUnit?partySelection.get(((PlayerUnit)a).getPlayerSlot()):null;SkillRepository activeRepository=setup==null?null:skillRegistry.find(setup.getCharacter().getId());if(activeRepository!=null&&index>=0&&index<activeRepository.all().size())a.replaceSkill(slot,new SkillRuntime(activeRepository.all().get(index),grade));refreshBattle();}}));addDebugButton(box,"적 추가 생성",v->{engine.addDebugEnemy(12);refreshBattle();});addDebugButton(box,"적 제거",v->{engine.removeDebugEnemy();refreshBattle();});addDebugButton(box,"현재 턴 강제 종료 / 다음 유닛",v->{BattleUnit a=engine.activeUnit();if(a!=null)submitCommand(new EndTurnCommand(a.getUnitId()));});addDebugButton(box,"전투 재시작",v->startBattle());addDebugButton(box,"상세 전투 로그 표시",v->showFullLog());
+        addDebugButton(box,"스킬 강제 장착 / 강화",v->promptText("슬롯,스킬번호,강화 (예: 1,20,0)",text->{String[] p=text.split(",");if(p.length==3){int slot=parse(p[0],0)-1,index=parse(p[1],0)-1,grade=parse(p[2],0);BattleUnit a=engine.activeUnit();PlayerBattleSetup setup=a instanceof PlayerUnit?partySelection.get(((PlayerUnit)a).getPlayerSlot()):null;SkillRepository activeRepository=setup==null?null:skillRegistry.find(setup.getCharacter().getId());if(activeRepository!=null&&index>=0&&index<activeRepository.all().size())a.replaceSkill(slot,new SkillRuntime(activeRepository.all().get(index),grade));refreshBattle();}}));addDebugButton(box,"적 추가 생성",v->showEnemySpawnPicker());addDebugButton(box,"적 제거",v->{engine.removeDebugEnemy();refreshBattle();});addDebugButton(box,"현재 턴 강제 종료 / 다음 유닛",v->{BattleUnit a=engine.activeUnit();if(a!=null)submitCommand(new EndTurnCommand(a.getUnitId()));});addDebugButton(box,"전투 재시작",v->startBattle());addDebugButton(box,"상세 전투 로그 표시",v->showFullLog());
         ScrollView scroll=new ScrollView(this);scroll.addView(box);GameModal.custom(this,"PAS Debug Panel",scroll);
     }
     private void showDebugPotionPicker(){if(!BetaFeatures.DEBUG_TOOLS)return;List<PotionData> potions=potionRepository.all();PotionInventory inventory=engine.getState().getPotionInventory();String[] items=new String[potions.size()];for(int i=0;i<potions.size();i++){PotionData potion=potions.get(i);items[i]=potion.getName()+" · HP "+potion.getHealing()+" · 보유 "+inventory.getCount(potion);}GameModal.list(this,"테스트 포션 획득 · "+inventory.getCount()+" / "+PotionInventory.MAX_COUNT,items,null,index->{PotionData potion=potions.get(index);int added=inventory.add(potion,1);toast(added>0?potion.getName()+" 1개 획득":"포션 소지 한도는 3개입니다.");refreshBattle();},null);}

@@ -52,10 +52,10 @@ public final class BattleFactory {
             PlayerUnit player=createPlayer("P"+slot+"_"+characterId+"_1",characterName+" P"+slot,tile,slot,setup.getRunes(),character);
             equip(player,setup.getLoadout(),setup.getUpgrades());equipRunePassive(player,setup.getRunes(),"rune:P"+slot);equipStartingPassive(player,character,"character:"+characterId);state.addUnit(player);
         }
-        state.addUnit(RedAltarEncounter.createBoss("ENEMY_RED_ALTAR_PRIEST_1",12));
+        state.addUnit(RedAltarEncounter.createBoss("ENEMY_RED_ALTAR_PRIEST_1",12,networkCoop));
         return new BattleEngine(state,random,debug);
     }
-    private static PlayerUnit createPlayer(String id,String name,int tile,int slot,RuneLoadout runes,CharacterData character){return character==null?new PlayerUnit(id,name,tile,slot,runes):new PlayerUnit(id,name,tile,slot,runes,character.getMaxHp(),character.getAttack(),character.getDefense(),character.getCriticalRate(),character.getEvasionRate(),character.getPortraitResource());}
+    private static PlayerUnit createPlayer(String id,String name,int tile,int slot,RuneLoadout runes,CharacterData character){PlayerUnit player=character==null?new PlayerUnit(id,name,tile,slot,runes):new PlayerUnit(id,name,tile,slot,runes,character.getMaxHp(),character.getAttack(),character.getDefense(),character.getCriticalRate(),character.getEvasionRate(),character.getPortraitResource());if(character!=null)player.setAppearance(character.getId(),character.getSkinId());return player;}
     private static void equip(PlayerUnit player,List<SkillData> loadout,List<Integer> upgrades){for(int i=0;i<6;i++){SkillData skill=loadout!=null&&i<loadout.size()?loadout.get(i):null;player.replaceSkill(i,skill==null?null:new SkillRuntime(skill,upgrades!=null&&i<upgrades.size()?upgrades.get(i):0));}}
     private static void equipRunePassive(PlayerUnit player,RuneLoadout runes,String source){if(runes==null||runes.getPrimary()==null)return;com.pas.game.rune.RuneData rune=runes.getPrimary();PassiveRuntime runtime=new PassiveRepository().create(rune.getPassiveId(),rune.passiveLevelForRuneLevel(runes.getPrimaryLevel()),source+":"+rune.getId());player.equipPassive(runtime);}
     private static void equipStartingPassive(PlayerUnit player,CharacterData character,String source){if(character==null||character.getStartingPassiveId()==null)return;PassiveRuntime runtime=new PassiveRepository().create(character.getStartingPassiveId(),character.getStartingPassiveLevel(),source);player.equipPassive(runtime);}

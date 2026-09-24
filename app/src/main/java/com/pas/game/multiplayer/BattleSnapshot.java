@@ -45,6 +45,7 @@ public final class BattleSnapshot {
 
     private static void unit(StringBuilder out,BattleUnit unit,BattleState state){
         out.append('{');text(out,"unitId",unit.getUnitId());text(out,"name",unit.getName());text(out,"team",unit.getTeam().name());number(out,"playerSlot",unit instanceof PlayerUnit?((PlayerUnit)unit).getPlayerSlot():0);
+        if(unit instanceof PlayerUnit){PlayerUnit player=(PlayerUnit)unit;text(out,"characterId",player.getCharacterId());text(out,"skinId",player.getSkinId());}
         if(unit instanceof com.pas.game.unit.EnemyUnit){
             com.pas.game.unit.EnemyUnit enemy=(com.pas.game.unit.EnemyUnit)unit;
             text(out,"enemyKind",enemy.getKind().name());text(out,"summonerId",enemy.getSummonerId());bool(out,"gateOpened",enemy.isGateOpened());number(out,"summonSequence",enemy.getSummonSequence());

@@ -51,6 +51,7 @@ public final class BattleEngine {
     private String executingUseToken;
     private final Set<String> abyssalMarkUseKeys=new HashSet<>();
     private int wizardLastSpecialDamage;
+    private int outcomeDeferralDepth;
     private static final int MAX_PASSIVE_DISPATCH_DEPTH=24;
 
     public BattleEngine(BattleState state,RandomProvider random,DebugOptions debug){this.state=state;this.random=random;this.debug=debug;}
@@ -135,6 +136,11 @@ public final class BattleEngine {
         String text="라운드 "+state.getRound()+" - "+unit.getName()+"의 턴"+(blocked?" (행동 불가)":"");
         log(text);
         for(StatusEffect status:new ArrayList<>(unit.getStatuses())){
+            if(status.getType()==StatusType.SELF_STUN&&status.getMagnitude()>0){
+                unit.removeStatusEffect(status);
+                log(unit.getName()+"이(가) 기절하여 이번 턴을 건너뜁니다.");
+                return advanceTurn();
+            }
             if(status.getType()==StatusType.HUNT_TURN_SKIP&&status.getMagnitude()>0){
                 status.decreaseMagnitude(1);
                 if(status.getMagnitude()<=0)unit.removeStatusEffect(status);
@@ -326,7 +332,23 @@ public final class BattleEngine {
         double multiplier=(attacker==null?1.5:attacker.getCriticalDamageMultiplier()+(attacker.getCriticalRate()/100.0));
         int dealt=dealDamage(attacker,target,ceilToInt(raw)*multiplier,false,DamageType.DIRECT,null);processSharpOnNormalAttack(attacker,true);return dealt;
     }
+    public int dealNonCriticalDamage(BattleUnit attacker,BattleUnit target,double raw){
+        return dealDamage(attacker,target,raw,true,DamageType.DIRECT,null,false);
+    }
+    /** Resolve all victims before deciding victory, including a caster killed by the HP cost. */
+    public void resolveEnemyArea(BattleUnit caster,int tile,double raw,boolean friendlyFire,boolean bloodCost){
+        outcomeDeferralDepth++;
+        try{
+            if(bloodCost){int cost=ceilToInt(caster.getMaxHp()*.15);int lost=caster.damage(cost);log(caster.getName()+"이(가) 피의 의식으로 HP "+lost+"을 잃었습니다.");if(caster.isDead())log(caster.getName()+" 사망");}
+            for(BattleUnit victim:new ArrayList<>(state.getUnits()))
+                if(!victim.isDead()&&victim.isOnField()&&(friendlyFire||victim.getTeam()==Team.PLAYER)&&BattleGrid.distance(tile,victim.getTile())<=1)
+                    dealNonCriticalDamage(caster,victim,raw);
+        }finally{outcomeDeferralDepth--;evaluateOutcome();}
+    }
     private int dealDamage(BattleUnit attacker,BattleUnit target,double raw,boolean rollHit,DamageType damageType,String cause){
+        return dealDamage(attacker,target,raw,rollHit,damageType,cause,true);
+    }
+    private int dealDamage(BattleUnit attacker,BattleUnit target,double raw,boolean rollHit,DamageType damageType,String cause,boolean allowCritical){
         if(target==null||target.isDead())return 0;
         if(target instanceof WizardPhantom){WizardPhantom phantom=(WizardPhantom)target;consumePhantomElement(phantom,"피해");if(!phantom.isDead()){PassiveContext afterTaken=PassiveContext.damage(this,PassiveTrigger.AFTER_DAMAGE_TAKEN,attacker,target,damageType,1);afterTaken.setFinalDamage(1);dispatchPassives(target,PassiveTrigger.AFTER_DAMAGE_TAKEN,afterTaken);PassiveContext afterDealt=PassiveContext.damage(this,PassiveTrigger.AFTER_DAMAGE_DEALT,attacker,target,damageType,1);afterDealt.setFinalDamage(1);dispatchPassives(attacker,PassiveTrigger.AFTER_DAMAGE_DEALT,afterDealt);double venom=attacker==null?0:attacker.sumEffect(UnitEffectType.VENOM_COATING);if(damageType==DamageType.DIRECT&&venom>0)applyStatus(phantom,new StatusEffect("venom@"+attacker.getUnitId(),StatusType.POISON,attacker.getUnitId(),-1,venom,true,true));}return 0;}
         if(debug.isInvinciblePlayers()&&target.getTeam()==Team.PLAYER){log("디버그 무적: 피해 0");return 0;}
@@ -336,7 +358,7 @@ public final class BattleEngine {
             int hitRoll=random.nextInt(100)+1;double hitChance=100-target.sum(StatusType.HIT_CHANCE_REDUCTION);if(hitRoll>hitChance)return 0;
             int critRoll=random.nextInt(100)+1;
             critical=debug.getCritical()==DebugOptions.ForcedRoll.SUCCESS||(debug.getCritical()==DebugOptions.ForcedRoll.NORMAL&&critRoll<=(attacker==null?0:attacker.getCriticalRate()));
-            if(debug.getCritical()==DebugOptions.ForcedRoll.FAILURE)critical=false;
+            if(!allowCritical||debug.getCritical()==DebugOptions.ForcedRoll.FAILURE)critical=false;
             if(!critical){
                 int evadeRoll=random.nextInt(100)+1;
                 evaded=debug.getEvasion()==DebugOptions.ForcedRoll.SUCCESS||(debug.getEvasion()==DebugOptions.ForcedRoll.NORMAL&&evadeRoll<=target.getEvasionRate());
@@ -583,13 +605,14 @@ public final class BattleEngine {
     public void log(String line){state.log(line);}
 
     private void evaluateOutcome(){
-        if(state.getOutcome()!=BattleOutcome.ONGOING)return;
+        if(outcomeDeferralDepth>0||state.getOutcome()!=BattleOutcome.ONGOING)return;
         cleanupWizardDeaths();if(state.getOutcome()!=BattleOutcome.ONGOING)return;
         RedAltarEncounter.synchronize(this);
-        boolean enemyAlive=false;for(BattleUnit u:state.getUnits())if(u.getTeam()==Team.ENEMY&&u.countsForOutcome()&&!u.isDead()){enemyAlive=true;break;}if(!enemyAlive){state.setOutcome(BattleOutcome.VICTORY);log("전투 승리");return;}
+        boolean enemyAlive=false;for(BattleUnit u:state.getUnits())if(u.getTeam()==Team.ENEMY&&u.countsForOutcome()&&!u.isDead()){enemyAlive=true;break;}
         List<BattleUnit> players=new ArrayList<>();for(BattleUnit u:state.getUnits())if(u.getTeam()==Team.PLAYER&&u.countsForOutcome())players.add(u);
         boolean anyDead=false,allDead=!players.isEmpty();for(BattleUnit p:players){anyDead|=p.isDead();allDead&=p.isDead();}
-        if((state.getReviveResourceCount()==0&&anyDead)||(state.getReviveResourceCount()>0&&allDead)){state.setOutcome(BattleOutcome.DEFEAT);log("전투 패배");}
+        if((state.getReviveResourceCount()==0&&anyDead)||(state.getReviveResourceCount()>0&&allDead)){state.setOutcome(BattleOutcome.DEFEAT);log("전투 패배");return;}
+        if(!enemyAlive){state.setOutcome(BattleOutcome.VICTORY);log("전투 승리");}
     }
     private void cleanupWizardDeaths(){for(BattleUnit owner:new ArrayList<>(state.getUnits()))if(owner.countsForOutcome()&&owner.isDead()){boolean hasGate=false;for(WizardBattleState.Gate gate:state.getWizardState().getGates())if(gate.ownerId.equals(owner.getUnitId())){hasGate=true;break;}if(hasGate){state.setOutcome(owner.getTeam()==Team.PLAYER?BattleOutcome.DEFEAT:BattleOutcome.VICTORY);log("이계의 문 시전자가 사망해 전투가 즉시 종료되었습니다.");return;}for(BattleUnit unit:new ArrayList<>(state.getUnits()))if(unit instanceof WizardPhantom&&((WizardPhantom)unit).getOwnerId().equals(owner.getUnitId()))state.removeUnit(unit);state.getWizardState().getStars().removeIf(star->star.ownerId.equals(owner.getUnitId()));state.getWizardState().getDrifts().remove(owner.getUnitId());state.getWizardState().getEchoes().remove(owner.getUnitId());}}
     private BattleResult outcomeResult(){return BattleResult.ok().add(state.getOutcome()==BattleOutcome.VICTORY?BattleEvent.Type.VICTORY:BattleEvent.Type.DEFEAT,state.getOutcome()==BattleOutcome.VICTORY?"승리":"패배");}
@@ -598,6 +621,12 @@ public final class BattleEngine {
     public void setHp(String unitId,int hp){BattleUnit u=state.find(unitId);if(u!=null)u.setHpForDebug(hp);}
     public void forceMove(String unitId,int tile){BattleUnit u=state.find(unitId);if(u!=null&&BattleGrid.isValid(tile)){u.setTile(tile);onEnterTile(u,tile);}}
     public void clearStatuses(String unitId){BattleUnit u=state.find(unitId);if(u!=null){for(StatusEffect status:new ArrayList<>(u.getStatuses()))onWizardStatusRemoved(u,status);for(StatusType t:StatusType.values())u.removeStatus(t);}}
+    public void addDebugEnemy(com.pas.game.unit.EnemyKind kind,int tile){
+        if(state.getOutcome()!=BattleOutcome.ONGOING)throw new IllegalStateException("진행 중인 전투에서만 추가할 수 있습니다.");
+        int index=1;while(state.find("CH1_DEBUG_"+index)!=null)index++;
+        EnemyUnit enemy=ChapterOneEnemies.create(kind,"CH1_DEBUG_"+index,tile);
+        enemy.setEligibleRound(state.getRound()+1);state.addUnit(enemy);log(enemy.getName()+" 추가 (다음 라운드부터 행동)");
+    }
     public void addDebugEnemy(int tile){
         int index=1;while(state.find("ENEMY_DUMMY_"+index)!=null)index++;
         EnemyUnit enemy=new EnemyUnit("ENEMY_DUMMY_"+index,"살아있는 허수아비 "+index,tile);

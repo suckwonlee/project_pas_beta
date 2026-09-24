@@ -105,6 +105,39 @@ public class NetworkClientTest {
         assertEquals("private-test-token", handshake.getHeader("X-PAS-TOKEN"));
         assertEquals("client", handshake.getHeader("X-PAS-CLIENT"));
     }
+    @Test public void chapterSocketUsesEncounterIdAndRejectsPreviousBattle() throws Exception {
+        String match="ABC234-chapter1-2";
+        BlockingQueue<String> received=new LinkedBlockingQueue<>(),snapshots=new LinkedBlockingQueue<>();
+        server.enqueue(new MockResponse().withWebSocketUpgrade(new WebSocketListener(){
+            @Override public void onOpen(WebSocket ws,Response response){ws.send(receipt(1,"SYNC"));}
+            @Override public void onMessage(WebSocket ws,String json){received.add(json);ws.send(receipt(2,CommandEnvelope.fromJson(json).getRequestId()));}
+        }));
+        socket=new WebSocketBattleTransport(endpoint(),connection(),http,Runnable::run,(s,m)->{},match);
+        socket.setSnapshotListener(snapshots::add);socket.connect();take(snapshots);
+        Callback wrong=new Callback();
+        socket.sendCommand(CommandEnvelope.create("ABC234-chapter1-1","client","old",1,new EndTurnCommand("P1")).toJson(),wrong);
+        assertTrue(take(wrong.values) instanceof Throwable);
+        Callback correct=new Callback();
+        socket.sendCommand(CommandEnvelope.create(match,"client","current",1,new EndTurnCommand("P1")).toJson(),correct);
+        assertEquals(match,CommandEnvelope.fromJson(take(received)).getMatchId());
+        assertEquals(2,CommandReceipt.fromJson((String)take(correct.values)).getRevision());
+        assertEquals("/ws/battle?roomCode=ABC234",server.takeRequest().getPath());
+    }
+    @Test public void chapterActionsSendChoicesNotResourceValues() throws Exception {
+        server.enqueue(new MockResponse().setBody("{\"revision\":8,\"phase\":\"HUB\",\"run\":{\"members\":[],\"gold\":{\"client\":200}}}"));
+        try(RoomApiClient api=new RoomApiClient(endpoint(),"",http,Runnable::run)){
+            Result<ChapterProtocol.Snapshot> result=new Result<>();
+            api.chapterAction(connection(),"claim_0001",7,"claim","loot-1",1,"elixir",result);
+            assertEquals(8,((ChapterProtocol.Snapshot)take(result.values)).revision);
+            RecordedRequest sent=server.takeRequest();
+            assertEquals("/api/v1/rooms/ABC234/chapter",sent.getPath());
+            assertEquals("private-test-token",sent.getHeader("X-PAS-TOKEN"));
+            var body=new Gson().fromJson(sent.getBody().readUtf8(),com.google.gson.JsonObject.class);
+            assertEquals(7,body.get("expectedRevision").getAsInt());
+            assertEquals("loot-1",body.get("ticketId").getAsString());
+            assertFalse(body.has("gold"));assertFalse(body.has("amount"));assertFalse(body.has("run"));
+        }
+    }
     @Test public void reconnectGetsFreshSnapshotWithoutReplayingUncertainAction() throws Exception {
         server.enqueue(new MockResponse().withWebSocketUpgrade(new WebSocketListener() {
             @Override public void onOpen(WebSocket ws, Response r) { ws.send(receipt(1, "SYNC")); }

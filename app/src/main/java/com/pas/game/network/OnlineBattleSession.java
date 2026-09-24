@@ -17,11 +17,15 @@ public final class OnlineBattleSession implements PlayerCommandSource {
     }
     private final RoomApiClient.Connection connection;
     private final MultiplayerTransport transport;
+    private final String matchId;
     private final Listener listener;
     private RemoteBattleSnapshot snapshot;
     private boolean connected, pending;
     public OnlineBattleSession(RoomApiClient.Connection connection, MultiplayerTransport transport, Listener listener) {
-        this.connection = connection; this.transport = transport; this.listener = listener;
+        this(connection,transport,listener,connection.roomCode);
+    }
+    public OnlineBattleSession(RoomApiClient.Connection connection, MultiplayerTransport transport, Listener listener,String matchId) {
+        this.connection = connection; this.transport = transport; this.listener = listener;this.matchId=matchId;
         transport.setSnapshotListener(this::receive);
     }
     public void connected(boolean value) { connected = value; listener.busyChanged(isBusy()); }
@@ -33,7 +37,7 @@ public final class OnlineBattleSession implements PlayerCommandSource {
         if (isBusy()) { listener.failed("서버 연결과 이전 행동 결과를 기다리세요."); return; }
         if (!owns(snapshot.find(command.getActorUnitId()))) { listener.failed("내 캐릭터만 조종할 수 있습니다."); return; }
         pending = true; listener.busyChanged(true);
-        String json = CommandEnvelope.create(connection.roomCode, connection.clientId,
+        String json = CommandEnvelope.create(matchId, connection.clientId,
                 UUID.randomUUID().toString(), snapshot.revision, command).toJson();
         transport.sendCommand(json, new MultiplayerTransport.Callback() {
             @Override public void onResponse(String json) { pending = false; receive(json); listener.busyChanged(isBusy()); }
